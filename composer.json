@@ -1,0 +1,24 @@
+{
+	"name": "slendium/slendium-static",
+	"description": "Static website generator.",
+	"type": "library",
+	"require-dev": {
+		"phpstan/phpstan": "^2.1",
+		"phpunit/phpunit": "^12.5.8"
+	},
+	"license": "MIT",
+	"autoload": { "psr-4": { "Slendium\\SlendiumStatic\\": "src/" } },
+	"autoload-dev": { "psr-4": { "Slendium\\SlendiumStaticTests\\": "tests/" } },
+	"authors": [
+		{
+			"name": "C. Fahner",
+			"email": "cfahner.git.ixuk9phi@slendium.org"
+		}
+	],
+	"config": { "platform": { "php": "8.5" } },
+	"require": {
+		"php": "^8.5",
+		"ext-libxml": "*",
+		"ext-dom": "*"
+	}
+}
