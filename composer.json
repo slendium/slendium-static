@@ -2,6 +2,12 @@
 	"name": "slendium/slendium-static",
 	"description": "Static website generator.",
 	"type": "library",
+	"require": {
+		"php": "^8.5",
+		"ext-libxml": "*",
+		"ext-dom": "*",
+		"slendium/compositor": "^0.1"
+	},
 	"require-dev": {
 		"phpstan/phpstan": "^2.1",
 		"phpunit/phpunit": "^12.5.8"
@@ -15,10 +21,5 @@
 			"email": "cfahner.git.ixuk9phi@slendium.org"
 		}
 	],
-	"config": { "platform": { "php": "8.5" } },
-	"require": {
-		"php": "^8.5",
-		"ext-libxml": "*",
-		"ext-dom": "*"
-	}
+	"config": { "platform": { "php": "8.5" } }
 }

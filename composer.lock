@@ -4,8 +4,98 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06169a541f3df998132998d551be6fae",
-    "packages": [],
+    "content-hash": "8986a12e7030c4b63dcf1f2394a1a503",
+    "packages": [
+        {
+            "name": "slendium/compositor",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/slendium/compositor.git",
+                "reference": "4ae4c1494e58fffe67a963a27166e5e3373fed8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/slendium/compositor/zipball/4ae4c1494e58fffe67a963a27166e5e3373fed8b",
+                "reference": "4ae4c1494e58fffe67a963a27166e5e3373fed8b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.5",
+                "slendium/localization": "^0.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^12.5.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Slendium\\Compositor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "C. Fahner",
+                    "email": "cfahner.git.ixuk9phi@slendium.org"
+                }
+            ],
+            "description": "A framework-agnostic library for generating (hyper)text documents from a component tree.",
+            "support": {
+                "source": "https://github.com/slendium/compositor/tree/v0.1.0"
+            },
+            "time": "2026-02-05T16:16:02+00:00"
+        },
+        {
+            "name": "slendium/localization",
+            "version": "v0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/slendium/localization.git",
+                "reference": "e444e2774a2aae872f471e3347557c13095475ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/slendium/localization/zipball/e444e2774a2aae872f471e3347557c13095475ae",
+                "reference": "e444e2774a2aae872f471e3347557c13095475ae",
+                "shasum": ""
+            },
+            "require": {
+                "ext-intl": "*",
+                "php": "^8.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^12.5.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Slendium\\Localization\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "C. Fahner",
+                    "email": "cfahner.git.ixuk9phi@slendium.org"
+                }
+            ],
+            "description": "Framework-agnostic interfaces for localization.",
+            "support": {
+                "issues": "https://github.com/slendium/localization/issues",
+                "source": "https://github.com/slendium/localization/tree/v0.4.0"
+            },
+            "time": "2026-01-28T16:04:12+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "myclabs/deep-copy",
@@ -298,16 +388,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "12.5.2",
+            "version": "12.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "4a9739b51cbcb355f6e95659612f92e282a7077b"
+                "reference": "b015312f28dd75b75d3422ca37dff2cd1a565e8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/4a9739b51cbcb355f6e95659612f92e282a7077b",
-                "reference": "4a9739b51cbcb355f6e95659612f92e282a7077b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/b015312f28dd75b75d3422ca37dff2cd1a565e8d",
+                "reference": "b015312f28dd75b75d3422ca37dff2cd1a565e8d",
                 "shasum": ""
             },
             "require": {
@@ -363,7 +453,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.2"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.3"
             },
             "funding": [
                 {
@@ -383,7 +473,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-24T07:03:04+00:00"
+            "time": "2026-02-06T06:01:44+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
