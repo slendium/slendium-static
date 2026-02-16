@@ -140,4 +140,14 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
+	public function test_merge_returnsMergedIterable(): void {
+		$list1 = [ 0, 1, 2, 3 ];
+		$list2 = [ 4, 5, 6, 7 ];
+
+		$result = Iteration::merge($list1, $list2)
+			|> Iteration::toList(...);
+
+		$this->assertSame([ ...$list1, ...$list2 ], $result);
+	}
+
 }

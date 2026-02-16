@@ -164,6 +164,18 @@ final class Iteration {
 	}
 
 	/**
+	 * @template TKey
+	 * @template TValue
+	 * @param iterable<TKey,TValue> $source
+	 * @param iterable<TKey,TValue> $addition
+	 * @return iterable<TKey,TValue>
+	 */
+	public static function merge(iterable $source, iterable $addition): iterable {
+		yield from $source;
+		yield from $addition;
+	}
+
+	/**
 	 * @template TSource
 	 * @param iterable<TSource> $source
 	 * @return list<TSource>
