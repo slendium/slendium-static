@@ -14,7 +14,9 @@ use Slendium\SlendiumStatic\Source\File;
 abstract class Resource {
 
 	public static function fromFile(File $file): Exception|self {
-		return new Exception('Not implemented');
+		return match($file->extension) {
+			default => new Resource\BinaryResource($file)
+		};
 	}
 
 	public Uri $uri {
