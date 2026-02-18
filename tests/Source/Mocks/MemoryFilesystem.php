@@ -50,7 +50,7 @@ class MemoryFilesystem implements Filesystem {
 		return new Exception('Memory filesystem is not writeable');
 	}
 
-	/** @return array<string,mixed>|string|null An array represents a directory, `true` a file, `null` not found */
+	/** @return array<string,mixed>|string|null An array represents a directory, a string a file, `null` not found */
 	private function findNode(string $path): array|string|null {
 		$parts = \trim($path, '/')
 			|> (fn($x) => \mb_split('\\/', $x));
