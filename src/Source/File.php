@@ -2,7 +2,10 @@
 
 namespace Slendium\SlendiumStatic\Source;
 
+use Exception;
 use SplFileInfo;
+
+use Slendium\SlendiumStatic\Site\Resource;
 
 /**
  * @internal
@@ -23,14 +26,25 @@ final class File {
 		get => $this->get_normalizedName();
 	}
 
+	public string $normalizedPath {
+		get => $this->fileInfo->getPath().$this->normalizedName;
+	}
+
 	public string $sourcePath {
 		get => $this->get_sourcePath();
 	}
 
 	private readonly SplFileInfo $fileInfo;
 
+	/** Keeps a cache of the results of `toResource()` */
+	private Exception|Resource|null $resource = null;
+
 	public function __construct(string $path, public readonly Directory $directory) {
 		$this->fileInfo = new SplFileInfo($path);
+	}
+
+	public function toResource(): Exception|Resource {
+		return $this->resource ??= Resource::fromFile($this);
 	}
 
 	private function get_normalizedName(): string {
