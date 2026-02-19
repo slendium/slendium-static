@@ -58,6 +58,9 @@ class DirectoryTest extends TestCase {
 			'blog.html' => '',
 			'terms.pdf' => '',
 			'blog' => [
+				// every folder with pages is required to have an ancestor page of the same name
+				'2025.html' => '',
+				'2026.html' => '',
 				// ensure no failure on two files with the same name in different subfolders
 				'2025' => [ 'article1.html' => '' ],
 				'2026' => [ 'article1.html' => '' ],
