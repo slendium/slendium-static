@@ -31,7 +31,7 @@ final class File {
 	}
 
 	public string $sourcePath {
-		get => $this->get_sourcePath();
+		get => \trim("{$this->directory->sourcePath}{$this->name}", '/');
 	}
 
 	private readonly SplFileInfo $fileInfo;
@@ -55,19 +55,6 @@ final class File {
 			'jpeg' => $this->fileInfo->getBasename('.jpeg').'.jpg',
 			default => $this->name,
 		};
-	}
-
-	private function get_sourcePath(): string {
-		$segments = [ ];
-		$current = $this->directory;
-		while ($current !== null) {
-			$segments[] = $current->name;
-			$current = $current->ancestor;
-		}
-
-		return [ ...\array_reverse($segments), $this->name ]
-			|> (fn($x) => \implode('/', $x))
-			|> (fn($x) => \trim($x, '/'));
 	}
 
 }

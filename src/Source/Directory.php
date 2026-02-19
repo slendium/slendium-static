@@ -19,6 +19,11 @@ final class Directory {
 		get => \basename($this->path);
 	}
 
+	/** Returns a path relative to the root source directory, ends with a '/' */
+	public string $sourcePath {
+		get => $this->get_sourcePath();
+	}
+
 	private readonly Filesystem $filesystem;
 
 	/** @var Exception|list<File|self>|null */
@@ -112,6 +117,18 @@ final class Directory {
 			$this->filesystem->isFile($path) => new File($path, directory: $this),
 			default => new SourceException("Item `$subPath` requested from `{$this->path}` does not exist")
 		};
+	}
+
+	private function get_sourcePath(): string {
+		$segments = [ ];
+		$current = $this;
+		while ($current->ancestor !== null) {
+			$segments[] = $current->name;
+			$current = $current->ancestor;
+		}
+		return \implode('/', \array_reverse($segments))
+			|> (fn($x) => \trim($x, '/'))
+			|> (fn($x) => "$x/");
 	}
 
 }
