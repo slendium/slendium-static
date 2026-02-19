@@ -14,6 +14,10 @@ use Slendium\SlendiumStatic\Site\Resource;
  */
 final class File {
 
+	public string $path {
+		get => $this->fileInfo->getPath();
+	}
+
 	public string $name {
 		get => $this->fileInfo->getBasename();
 	}
