@@ -35,7 +35,9 @@ class FileTest extends TestCase {
 
 	public static function fileWithSourcePathCases(): iterable {
 		yield [ new File('root.html', new Directory('/')), 'root.html' ];
-		yield [ new File('index.html', new Directory('/tmp/dummy', ancestor: new Directory('/tmp'))), 'tmp/dummy/index.html' ];
+		yield [ new File('index.html', new Directory('/tmp/')), 'index.html' ];
+		// the upper ancestor is the root folder, which should not appear in the source path
+		yield [ new File('index.html', new Directory('/tmp/dummy', ancestor: new Directory('/tmp'))), 'dummy/index.html' ];
 	}
 
 	#[DataProvider('fileWithSourcePathCases')]
