@@ -23,4 +23,11 @@ class SourceException extends Exception {
 		return new self("Resource at `{$file->sourcePath}` should have a non-empty name");
 	}
 
+	public static function forOrphanedResource(File $file): self {
+		$ancestorPath = ($file->directory->ancestor->sourcePath ?? '')
+			."{$file->directory->name}.{$file->extension}";
+
+		return new self("Resource at `{$file->sourcePath}` should have an ancestor at `$ancestorPath`");
+	}
+
 }
