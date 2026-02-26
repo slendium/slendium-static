@@ -117,6 +117,20 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
+	public static function implodeCases(): iterable {
+		yield [ [ ], ',', '' ];
+		yield [ [ 1 ], ',', '1' ];
+		yield [ [ 'a', 'b' ], ',', 'a,b' ];
+		yield [ [ 'a', 'b' ], '', 'ab' ];
+	}
+
+	#[DataProvider('implodeCases')]
+	public function test_implode_returnsImplodedValue(iterable $source, string $separator, string $expectedResult): void {
+		$result = Iteration::implode($source, $separator);
+
+		$this->assertSame($expectedResult, $result);
+	}
+
 	public function test_flatten_returnsFlattenedIterable(): void {
 		$values = [ 1, 2, 3 ];
 		$expectedResult = [ 1, 2, 2, 3, 3, 3 ];

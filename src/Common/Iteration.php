@@ -123,6 +123,20 @@ final class Iteration {
 		return $carry;
 	}
 
+	/** @param iterable<Stringable|string|float|int> $source */
+	public static function implode(iterable $source, string $separator): string {
+		$out = '';
+		$first = true;
+		foreach ($source as $value) {
+			if (!$first) {
+				$out .= $separator;
+			}
+			$out .= $value;
+			$first = false;
+		}
+		return $out;
+	}
+
 	/**
 	 * @template TSourceKey
 	 * @template TSourceValue
