@@ -6,7 +6,8 @@
 		"php": "^8.5",
 		"ext-libxml": "*",
 		"ext-dom": "*",
-		"slendium/compositor": "^0.1"
+		"slendium/compositor": "^0.1",
+		"erusev/parsedown": "^1.8"
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^2.1",
