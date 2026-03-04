@@ -109,8 +109,12 @@ final class Directory {
 			return $contents;
 		}
 
+		$resolvedItems = $contents
+			|> (fn($x) => Iteration::filter($x, static fn($path) => $path !== '.' && $path !== '..'))
+			|> (fn($x) => Iteration::map($x, $this->resolveSubPath(...)));
+
 		$resolved = [ ];
-		foreach (Iteration::map($contents, $this->resolveSubPath(...)) as $resolvedItem) {
+		foreach ($resolvedItems as $resolvedItem) {
 			if ($resolvedItem instanceof Exception) {
 				return $resolvedItem;
 			}
