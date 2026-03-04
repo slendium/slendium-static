@@ -2,14 +2,17 @@
 
 namespace Slendium\SlendiumStatic\Source;
 
+use ArrayAccess;
 use Exception;
 use NoDiscard;
 
+use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Site\Resource;
 
 /**
  * @internal
+ * @phpstan-import-type ConfigsMap from Configs
  * @author C. Fahner
  * @copyright Slendium 2026
  */
@@ -29,8 +32,11 @@ final class Directory {
 	/** @var Exception|list<File|self>|null */
 	private Exception|array|null $contents = null;
 
-	/** @param iterable<File> $files */
-	private static function convertGroupedFilesToResource(iterable $files): Exception|Resource {
+	/**
+	 * @param iterable<File> $files
+	 * @param ConfigsMap $configs
+	 */
+	private static function convertGroupedFilesToResource(iterable $files, ArrayAccess|array $configs): Exception|Resource {
 		$files = Iteration::toList($files);
 		if (\count($files) < 1) {
 			return new SourceException('Attempt to create resource from empty list of files');
@@ -42,7 +48,7 @@ final class Directory {
 			return SourceException::forUnnamedResource($files[0]);
 		}
 
-		return $files[0]->toResource();
+		return $files[0]->toResource($configs);
 	}
 
 	public function __construct(
@@ -57,9 +63,12 @@ final class Directory {
 		$this->filesystem = $filesystem ?? new RealFilesystem;
 	}
 
-	/** @return iterable<Resource|Exception> */
+	/**
+	 * @param ConfigsMap $configs
+	 * @return iterable<Resource|Exception>
+	 */
 	#[NoDiscard]
-	public function extractResources(): iterable {
+	public function extractResources(ArrayAccess|array $configs): iterable {
 		$files = [ ];
 		foreach ($this->getFilesRecursively() as $file) {
 			if ($file instanceof Exception) {
@@ -71,7 +80,7 @@ final class Directory {
 
 		yield from $files
 			|> (fn($x) => Iteration::group($x, static fn($file) => $file->normalizedPath))
-			|> (fn($x) => Iteration::map($x, self::convertGroupedFilesToResource(...)));
+			|> (fn($x) => Iteration::map($x, fn($files) => self::convertGroupedFilesToResource($files, $configs)));
 	}
 
 	/** @return Exception|list<File|self> */

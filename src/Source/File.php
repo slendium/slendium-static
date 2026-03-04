@@ -2,13 +2,16 @@
 
 namespace Slendium\SlendiumStatic\Source;
 
+use ArrayAccess;
 use Exception;
 use SplFileInfo;
 
+use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Site\Resource;
 
 /**
  * @internal
+ * @phpstan-import-type ConfigsMap from Configs
  * @author C. Fahner
  * @copyright Slendium 2026
  */
@@ -47,15 +50,15 @@ final class File {
 		$this->fileInfo = new SplFileInfo($path);
 	}
 
-	public function toResource(): Exception|Resource {
-		return $this->resource ??= Resource::fromFile($this);
+	/** @param ConfigsMap $configs */
+	public function toResource(ArrayAccess|array $configs): Exception|Resource {
+		return $this->resource ??= Resource::fromFile($configs, $this);
 	}
 
 	private function get_normalizedName(): string {
 		return match($this->extension) {
 			'htm' => $this->fileInfo->getBasename('.htm').'.html',
 			'md' => $this->fileInfo->getBasename('.md').'.html',
-			'php' => $this->fileInfo->getBasename('.php').'.html',
 			'jpeg' => $this->fileInfo->getBasename('.jpeg').'.jpg',
 			default => $this->name,
 		};

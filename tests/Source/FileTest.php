@@ -17,7 +17,6 @@ class FileTest extends TestCase {
 			yield [ "{$path}index.html", 'index.html' ];
 			yield [ "{$path}index.htm", 'index.html' ];
 			yield [ "{$path}index.md", 'index.html' ];
-			yield [ "{$path}index.php", 'index.html' ];
 			yield [ "{$path}image.jpeg", 'image.jpg' ];
 			yield [ "{$path}image.jpg", 'image.jpg' ];
 			yield [ "{$path}invoice.pdf", 'invoice.pdf' ];

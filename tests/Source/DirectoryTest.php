@@ -30,7 +30,7 @@ class DirectoryTest extends TestCase {
 			scanDirectory: static fn() => [ '.', '..', 'test' ],
 		));
 
-		Iteration::toList($sut->extractResources());
+		Iteration::toList($sut->extractResources([ ]));
 
 		$this->assertTrue($called);
 		$this->assertFalse($pathFlagged);
@@ -47,14 +47,14 @@ class DirectoryTest extends TestCase {
 	public function test_extractResources_shouldYieldErrors_whenSourceInvalid(Filesystem $filesystem): void {
 		$sut = new Directory('/tmp', filesystem: $filesystem);
 
-		$result = Iteration::toList($sut->extractResources());
+		$result = Iteration::toList($sut->extractResources([ ]));
 
 		$this->assertTrue(Iteration::all($result, static fn($item) => $item instanceof SourceException));
 	}
 
 	public function test_extractResources_shouldYieldResources_whenSourceValid(): void {
 		$filesystem = new MemoryFilesystem([ 'tmp' => [
-			'index.php' => '',
+			'index.html' => '',
 			'blog.html' => '',
 			'terms.pdf' => '',
 			'blog' => [
@@ -70,7 +70,7 @@ class DirectoryTest extends TestCase {
 		] ]);
 		$sut = new Directory('/tmp', filesystem: $filesystem);
 
-		$result = Iteration::toList($sut->extractResources());
+		$result = Iteration::toList($sut->extractResources([ ]));
 
 		$this->assertTrue(\count($result) > 0);
 		$this->assertTrue(Iteration::all($result, static fn($item) => $item instanceof Resource));

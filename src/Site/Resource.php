@@ -2,21 +2,25 @@
 
 namespace Slendium\SlendiumStatic\Site;
 
+use ArrayAccess;
 use Exception;
 
+use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Source\File;
 
 /**
  * @internal
+ * @phpstan-import-type ConfigsMap from Configs
  * @author C. Fahner
  * @copyright Slendium 2026
  */
 abstract class Resource {
 
-	public static function fromFile(File $file): Exception|self {
+	/** @param ConfigsMap $configs */
+	public static function fromFile(ArrayAccess|array $configs, File $file): Exception|self {
 		return match($file->extension) {
-			'html', 'htm', 'md', 'php' => Resource\Page::fromFile($file),
-			default => new Resource\BinaryResource($file)
+			'html', 'htm', 'md' => Resource\Page::fromFile($configs, $file),
+			default => new Resource\BinaryResource($configs, $file)
 		};
 	}
 
@@ -24,7 +28,14 @@ abstract class Resource {
 		get => $this->get_uri();
 	}
 
-	protected function __construct(private readonly File $file) { }
+	protected function __construct(
+
+		/** @var ConfigsMap */
+		public readonly ArrayAccess|array $configs,
+
+		protected readonly File $file,
+
+	) { }
 
 	public abstract function writeToFile(string $path): Exception|true;
 
