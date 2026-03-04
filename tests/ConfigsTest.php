@@ -3,6 +3,9 @@
 namespace Slendium\SlendiumStaticTests;
 
 use PHPUnit\Framework\TestCase;
+use Slendium\Localization\Base\Locale;
+use Slendium\Localization\Base\LocaleList;
+use Slendium\Localization\LocaleList as ILocaleList;
 
 use Slendium\SlendiumStatic\Base\Builders\ConfigsBuilder;
 use Slendium\SlendiumStatic\Base\Content\DefaultSummarizer;
@@ -18,6 +21,30 @@ use Slendium\SlendiumStatic\Content\TitleTemplate;
  * @copyright Slendium 2026
  */
 class ConfigsTest extends TestCase {
+
+	public function test_getLocales_shouldReturnLocaleListInstance_whenLocaleListGiven(): void {
+		$localeList = new LocaleList([ new Locale('nl'), new Locale('en') ]);
+		$configs = new ConfigsBuilder()
+			->setLocales($localeList)
+			->build();
+
+		$result = Configs::getLocales($configs);
+
+		$this->assertSame($localeList, $result);
+	}
+
+	public function test_getLocales_shouldParseStringLocales(): void {
+		$configs = new ConfigsBuilder()
+			->setLocales([ new Locale('fy'), 'nl', 'en' ])
+			->build();
+
+		$result = Configs::getLocales($configs);
+
+		$this->assertInstanceOf(ILocaleList::class, $result);
+		$this->assertSame('fy', $result[0]->language);
+		$this->assertSame('nl', $result[1]->language);
+		$this->assertSame('en', $result[2]->language);
+	}
 
 	public function test_getSummarizer_shouldReturnGivenInstance_whenGiven(): void {
 		$summarizer = new DefaultSummarizer;

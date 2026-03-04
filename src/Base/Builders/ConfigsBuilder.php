@@ -32,6 +32,16 @@ class ConfigsBuilder {
 
 	/**
 	 * @since 1.0
+	 * @param iterable<Locale|string> $locales
+	 * @return $this
+	 */
+	public function setLocales(iterable $locales): self {
+		$this->values[Configs::KEY_LOCALES] = $locales;
+		return $this;
+	}
+
+	/**
+	 * @since 1.0
 	 * @return $this
 	 */
 	public function setSummarizer(Summarizer $summarizer): self {
