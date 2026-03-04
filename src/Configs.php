@@ -26,6 +26,19 @@ final class Configs {
 	/** @since 1.0 */
 	const KEY_TITLE_TEMPLATE = 'titleTemplate';
 
+	/** @since 1.0 */
+	const KEY_SUMMARIZER = 'summarizer';
+
+	/**
+	 * @since 1.0
+	 * @param ConfigsMap $configs
+	 */
+	public static function getSummarizer(ArrayAccess|array $configs): Summarizer {
+		return isset($configs[self::KEY_SUMMARIZER]) && $configs[self::KEY_SUMMARIZER] instanceof Summarizer
+			? $configs[self::KEY_SUMMARIZER]
+			: new DefaultSummarizer;
+	}
+
 	/**
 	 * @since 1.0
 	 * @param ConfigsMap $configs

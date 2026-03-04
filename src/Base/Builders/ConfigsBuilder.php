@@ -6,6 +6,7 @@ use Closure;
 
 use Slendium\SlendiumStatic\Base\Content\ClosureTitleTemplate;
 use Slendium\SlendiumStatic\Configs;
+use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
 
 /**
@@ -27,6 +28,15 @@ class ConfigsBuilder {
 	 */
 	public function build(): array {
 		return $this->values;
+	}
+
+	/**
+	 * @since 1.0
+	 * @return $this
+	 */
+	public function setSummarizer(Summarizer $summarizer): self {
+		$this->values[Configs::KEY_SUMMARIZER] = $summarizer;
+		return $this;
 	}
 
 	/**
