@@ -4,6 +4,8 @@ namespace Slendium\SlendiumStatic\Base\Builders;
 
 use Closure;
 
+use Slendium\Localization\Locale;
+
 use Slendium\SlendiumStatic\Base\Content\ClosureTitleTemplate;
 use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Content\Summarizer;
