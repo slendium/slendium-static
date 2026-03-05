@@ -8,6 +8,7 @@ use Slendium\Localization\Locale;
 
 use Slendium\SlendiumStatic\Base\Content\ClosureTitleTemplate;
 use Slendium\SlendiumStatic\Configs;
+use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
 
@@ -30,6 +31,15 @@ class ConfigsBuilder {
 	 */
 	public function build(): array {
 		return $this->values;
+	}
+
+	/**
+	 * @since 1.0
+	 * @return $this
+	 */
+	public function setBaseSectionProvider(SectionProvider $provider): self {
+		$this->values[Configs::KEY_BASE_SECTIONS] = $provider;
+		return $this;
 	}
 
 	/**

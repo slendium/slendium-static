@@ -12,6 +12,7 @@ use Slendium\Localization\LocaleList as ILocaleList;
 use Slendium\SlendiumStatic\Base\Content\ClosureTitleTemplate;
 use Slendium\SlendiumStatic\Base\Content\DefaultSummarizer;
 use Slendium\SlendiumStatic\Common\Iteration;
+use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
 
@@ -24,6 +25,9 @@ use Slendium\SlendiumStatic\Content\TitleTemplate;
 final class Configs {
 
 	/** @since 1.0 */
+	const KEY_BASE_SECTIONS = 'baseSections';
+
+	/** @since 1.0 */
 	const KEY_LOCALES = 'locales';
 
 	/** @since 1.0 */
@@ -31,6 +35,17 @@ final class Configs {
 
 	/** @since 1.0 */
 	const KEY_SUMMARIZER = 'summarizer';
+
+	/**
+	 * @since 1.0
+	 * @see self::KEY_BASE_SECTIONS
+	 * @param ConfigsMap $configs
+	 */
+	public static function getBaseSectionProvider(ArrayAccess|array $configs): ?SectionProvider {
+		return isset($configs[self::KEY_BASE_SECTIONS]) && $configs[self::KEY_BASE_SECTIONS] instanceof SectionProvider
+			? $configs[self::KEY_BASE_SECTIONS]
+			: null;
+	}
 
 	/**
 	 * @since 1.0

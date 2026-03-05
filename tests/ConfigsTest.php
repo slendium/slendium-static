@@ -8,8 +8,10 @@ use Slendium\Localization\Base\LocaleList;
 use Slendium\Localization\LocaleList as ILocaleList;
 
 use Slendium\SlendiumStatic\Base\Builders\ConfigsBuilder;
+use Slendium\SlendiumStatic\Base\Content\ArraySectionProvider;
 use Slendium\SlendiumStatic\Base\Content\DefaultSummarizer;
 use Slendium\SlendiumStatic\Configs;
+use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
 
@@ -21,6 +23,25 @@ use Slendium\SlendiumStatic\Content\TitleTemplate;
  * @copyright Slendium 2026
  */
 class ConfigsTest extends TestCase {
+
+	public function test_getBaseSectionProvider_shouldReturnInstance_whenGiven(): void {
+		$expectedSectionProvider = new ArraySectionProvider([ ]);
+		$configs = new ConfigsBuilder()
+			->setBaseSectionProvider($expectedSectionProvider)
+			->build();
+
+		$result = Configs::getBaseSectionProvider($configs);
+
+		$this->assertSame($expectedSectionProvider, $result);
+	}
+
+	public function test_getBaseSectionProvider_shouldReturnNull_whenOmitted(): void {
+		$configs = new ConfigsBuilder()->build();
+
+		$result = Configs::getBaseSectionProvider($configs);
+
+		$this->assertNull($result);
+	}
 
 	public function test_getLocales_shouldReturnLocaleListInstance_whenLocaleListGiven(): void {
 		$localeList = new LocaleList([ new Locale('nl'), new Locale('en') ]);
