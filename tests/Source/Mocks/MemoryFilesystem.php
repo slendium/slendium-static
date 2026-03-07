@@ -46,15 +46,23 @@ class MemoryFilesystem implements Filesystem {
 	}
 
 	#[Override]
-	public function writeFile(string $path, string $contents): Exception {
+	public function writeFile(string $path, string $contents): Exception|true {
 		return new Exception('Memory filesystem is not writeable');
+	}
+
+	#[Override]
+	public function copyFile(string $sourcePath, string $targetPath): Exception|true {
+		return new Exception('Memory filesystem does not support copying');
 	}
 
 	/** @return array<string,mixed>|string|null An array represents a directory, a string a file, `null` not found */
 	private function findNode(string $path): array|string|null {
-		$parts = \trim($path, '/')
-			|> (fn($x) => \mb_split('\\/', $x));
+		$path = \trim($path, '/');
+		if ($path === '') {
+			return $this->structure;
+		}
 
+		$parts = \mb_split('\\/', $path);
 		$current = $this->structure;
 		foreach ($parts as $part) {
 			$current = \is_array($current) && isset($current[$part])
