@@ -1,2 +1,4 @@
 vendor/
+content/
+public/
 .phpunit.result.cache
