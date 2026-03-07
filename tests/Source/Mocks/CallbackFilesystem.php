@@ -26,6 +26,10 @@ class CallbackFilesystem implements Filesystem {
 		return new Exception('Not implemented');
 	};
 
+	private const COPY_EXCEPTION = static function ($from, $to) {
+		return new Exception('Not implemented');
+	};
+
 	public function __construct(
 
 		/** @var Closure(string):bool */
@@ -42,6 +46,9 @@ class CallbackFilesystem implements Filesystem {
 
 		/** @var Closure(string,string):Exception|true */
 		private readonly Closure $writeFile = self::WRITE_EXCEPTION,
+
+		/** @var Closure(string,string):Exception|true */
+		private readonly Closure $copyFile = self::COPY_EXCEPTION,
 
 	) { }
 
@@ -69,6 +76,11 @@ class CallbackFilesystem implements Filesystem {
 	#[Override]
 	public function writeFile(string $path, string $contents): Exception|true {
 		return ($this->writeFile)($path, $contents);
+	}
+
+	#[Override]
+	public function copyFile(string $sourcePath, string $targetPath): Exception|true {
+		return ($this->copyFile)($sourcePath, $targetPath);
 	}
 
 }
