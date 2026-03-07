@@ -7,6 +7,7 @@ use Exception;
 use NoDiscard;
 
 use Slendium\SlendiumStatic\Configs;
+use Slendium\SlendiumStatic\Base\Pathed;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Site\Resource;
 
@@ -27,28 +28,38 @@ final class Directory {
 		get => $this->get_sourcePath();
 	}
 
-	private readonly Filesystem $filesystem;
+	public readonly Filesystem $filesystem;
 
-	/** @var Exception|list<File|self>|null */
-	private Exception|array|null $contents = null;
+	/** @var ?list<Pathed<Exception|File|self>> */
+	private ?array $contents = null;
 
 	/**
-	 * @param iterable<File> $files
+	 * @param iterable<string,File> $files Map of paths to files (the paths are for logging consistency)
 	 * @param ConfigsMap $configs
+	 * @return iterable<string,Exception|Resource>
 	 */
-	private static function convertGroupedFilesToResource(iterable $files, ArrayAccess|array $configs): Exception|Resource {
-		$files = Iteration::toList($files);
-		if (\count($files) < 1) {
-			return new SourceException('Attempt to create resource from empty list of files');
-		} else if (\count($files) > 1) {
-			return SourceException::forAmbiguousResource($files);
+	private static function convertFilesToResources(iterable $files, ArrayAccess|array $configs): iterable {
+		/** @var array<string,array{0:string,1:?File}> */
+		$unique = [ ];
+
+		foreach ($files as $path => $file) {
+			if (\mb_strlen($file->name) === \mb_strlen($file->extension) + 1) {
+				yield $path => SourceException::forUnnamedResource($file);
+			} else if (isset($unique[$file->normalizedPath])) {
+				yield $unique[$file->normalizedPath][0] => SourceException::forAmbiguousResource($file);
+				// do not convert the original either, no way to tell which one is preferred
+				$unique[$file->normalizedPath][1] = null;
+				yield $path => SourceException::forAmbiguousResource($file);
+			} else {
+				$unique[$file->normalizedPath] = [ $path, $file ];
+			}
 		}
 
-		if (\mb_strlen($files[0]->name) === \mb_strlen($files[0]->extension) + 1) {
-			return SourceException::forUnnamedResource($files[0]);
+		foreach ($unique as $entry) {
+			if ($entry[1] !== null) {
+				yield $entry[0] => $entry[1]->toResource($configs);
+			}
 		}
-
-		return $files[0]->toResource($configs);
 	}
 
 	public function __construct(
@@ -65,70 +76,61 @@ final class Directory {
 
 	/**
 	 * @param ConfigsMap $configs
-	 * @return iterable<Resource|Exception>
+	 * @return iterable<string,Resource|Exception> A path mapped to either a resource or an error
 	 */
 	#[NoDiscard]
 	public function extractResources(ArrayAccess|array $configs): iterable {
 		$files = [ ];
-		foreach ($this->getFilesRecursively() as $file) {
-			if ($file instanceof Exception) {
-				yield $file;
+		foreach ($this->getFilesRecursively() as $path => $errorOrFile) {
+			if ($errorOrFile instanceof Exception) {
+				yield $path => $errorOrFile;
 			} else {
-				$files[] = $file;
+				$files[$path] = $errorOrFile;
 			}
 		}
-
-		yield from $files
-			|> (fn($x) => Iteration::group($x, static fn($file) => $file->normalizedPath))
-			|> (fn($x) => Iteration::map($x, fn($files) => self::convertGroupedFilesToResource($files, $configs)));
+		yield from self::convertFilesToResources($files, $configs);
 	}
 
-	/** @return Exception|list<File|self> */
-	public function getContents(): Exception|array {
+	/** @return list<Pathed<Exception|File|self>> */
+	public function getContents(): array {
 		return $this->contents ??= $this->initializeContents();
 	}
 
-	/** @return iterable<Exception|File> */
+	/** @return iterable<string,Exception|File> A path mapped to either a file or an error */
 	private function getFilesRecursively(): iterable {
-		$contents = $this->getContents();
-		if (!\is_array($contents)) {
-			yield $contents;
-			return;
+		foreach ($this->getContents() as $resolved) {
+			if ($resolved->value instanceof self) {
+				yield from $resolved->value->getFilesRecursively();
+			} else {
+				yield $resolved->path => $resolved->value;
+			}
 		}
-
-		yield from Iteration::flatten($contents, fn(File|self $item) => $item instanceof self
-			? $item->getFilesRecursively()
-			: [ $item ]
-		);
 	}
 
-	/** @return Exception|list<File|self> */
-	private function initializeContents(): Exception|array {
+	/** @return list<Pathed<Exception|File|self>> */
+	private function initializeContents(): array {
 		$contents = $this->filesystem->scanDirectory($this->path);
 		if ($contents instanceof Exception) {
-			return $contents;
+			return [ new Pathed($this->path, $contents) ]; // @phpstan-ignore return.type (Pathed<Exception> is technically not covariant but it doesnt matter here)
 		}
 
-		$resolvedItems = $contents
+		return $contents
 			|> (fn($x) => Iteration::filter($x, static fn($path) => $path !== '.' && $path !== '..'))
-			|> (fn($x) => Iteration::map($x, $this->resolveSubPath(...)));
-
-		$resolved = [ ];
-		foreach ($resolvedItems as $resolvedItem) {
-			if ($resolvedItem instanceof Exception) {
-				return $resolvedItem;
-			}
-			$resolved[] = $resolvedItem;
-		}
-		return $resolved;
+			|> (fn($x) => Iteration::map($x, $this->resolveSubPath(...)))
+			|> Iteration::toList(...);
 	}
 
-	private function resolveSubPath(string $subPath): Exception|File|self {
+	/** @return Pathed<Exception|File|self> */
+	private function resolveSubPath(string $subPath): Pathed {
 		$path = "{$this->path}/$subPath";
+		return new Pathed($path, $this->resolvePath($path));
+	}
+
+	private function resolvePath(string $path): Exception|File|self {
 		return match(true) {
 			$this->filesystem->isDirectory($path) => new Directory($path, $this, $this->filesystem),
 			$this->filesystem->isFile($path) => new File($path, directory: $this),
-			default => new SourceException("Item `$subPath` requested from `{$this->path}` does not exist")
+			default => new SourceException("Item `$path` requested from `{$this->path}` does not exist")
 		};
 	}
 
