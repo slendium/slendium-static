@@ -37,7 +37,7 @@ class DirectoryTest extends TestCase {
 	}
 
 	public static function sourceExceptionCases(): iterable {
-		// ambiguous, both files should resolve to index.html
+		// ambiguous, both files correspond to index.html and BOTH should resolve to a SourceException
 		yield [ new MemoryFilesystem([ 'tmp' => [ 'index.htm' => '', 'index.html' => '' ] ]) ];
 		// page name cannot be empty
 		yield [ new MemoryFilesystem([ 'tmp' => [ '.html' => '' ] ]) ];
