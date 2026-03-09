@@ -11,6 +11,7 @@ use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Source\Filesystem;
 
 /**
  * @since 1.0
@@ -31,6 +32,15 @@ class ConfigsBuilder {
 	 */
 	public function build(): array {
 		return $this->values;
+	}
+
+	/**
+	 * @since 1.0
+	 * @return $this
+	 */
+	public function setFilesystem(Filesystem $filesystem): self {
+		$this->values[Configs::KEY_FILESYSTEM] = $filesystem;
+		return $this;
 	}
 
 	/**

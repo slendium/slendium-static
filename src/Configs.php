@@ -15,6 +15,8 @@ use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Source\Filesystem;
+use Slendium\SlendiumStatic\Source\RealFilesystem;
 
 /**
  * @since 1.0
@@ -23,6 +25,9 @@ use Slendium\SlendiumStatic\Content\TitleTemplate;
  * @copyright Slendium 2026
  */
 final class Configs {
+
+	/** @since 1.0 */
+	const KEY_FILESYSTEM = 'filesystem';
 
 	/** @since 1.0 */
 	const KEY_BASE_SECTIONS = 'baseSections';
@@ -35,6 +40,17 @@ final class Configs {
 
 	/** @since 1.0 */
 	const KEY_SUMMARIZER = 'summarizer';
+
+	/**
+	 * @since 1.0
+	 * @see self::KEY_FILESYSTEM
+	 * @param ConfigsMap $configs
+	 */
+	public static function getFilesystem(ArrayAccess|array $configs): Filesystem {
+		return isset($configs[self::KEY_FILESYSTEM]) && $configs[self::KEY_FILESYSTEM] instanceof Filesystem
+			? $configs[self::KEY_FILESYSTEM]
+			: new RealFilesystem;
+	}
 
 	/**
 	 * @since 1.0

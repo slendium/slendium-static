@@ -14,6 +14,8 @@ use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Source\Filesystem;
+use Slendium\SlendiumStaticTests\Source\Mocks\MemoryFilesystem;
 
 /**
  * Tests both {@see Configs} and {@see ConfigsBuilder}.
@@ -23,6 +25,25 @@ use Slendium\SlendiumStatic\Content\TitleTemplate;
  * @copyright Slendium 2026
  */
 class ConfigsTest extends TestCase {
+
+	public function test_getFilesystem_shouldReturnInstance_whenGiven(): void {
+		$fs = new MemoryFilesystem([ ]);
+		$configs = new ConfigsBuilder()
+			->setFilesystem($fs)
+			->build();
+
+		$result = Configs::getFilesystem($configs);
+
+		$this->assertSame($fs, $result);
+	}
+
+	public function test_getFilesystem_shouldReturnInstance_whenOmitted(): void {
+		$configs = new ConfigsBuilder()->build();
+
+		$result = Configs::getFilesystem($configs);
+
+		$this->assertInstanceOf(Filesystem::class, $result);
+	}
 
 	public function test_getBaseSectionProvider_shouldReturnInstance_whenGiven(): void {
 		$expectedSectionProvider = new ArraySectionProvider([ ]);
