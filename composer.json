@@ -2,6 +2,7 @@
 	"name": "slendium/slendium-static",
 	"description": "Static website generator.",
 	"type": "library",
+	"bin": [ "generate-site" ],
 	"require": {
 		"php": "^8.5",
 		"ext-libxml": "*",
