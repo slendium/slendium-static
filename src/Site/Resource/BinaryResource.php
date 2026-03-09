@@ -2,10 +2,10 @@
 
 namespace Slendium\SlendiumStatic\Site\Resource;
 
-use Exception;
 use Override;
 
 use Slendium\SlendiumStatic\Site\Resource;
+use Slendium\SlendiumStatic\Source\File;
 
 /**
  * @internal
@@ -15,8 +15,8 @@ use Slendium\SlendiumStatic\Site\Resource;
 final class BinaryResource extends Resource {
 
 	#[Override]
-	public function writeToFile(string $path): Exception {
-		return new Exception('Not implemented');
+	public function generateContents(): File {
+		return $this->file;
 	}
 
 }

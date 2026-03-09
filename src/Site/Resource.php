@@ -37,11 +37,11 @@ abstract class Resource {
 
 	) { }
 
-	public abstract function writeToFile(string $path): Exception|true;
+	public abstract function generateContents(): File|Exception|string;
 
 	private function get_uri(): Uri {
 		$current = $this->file->directory;
-		$path = [ $this->file->normalizedName, $current->name ];
+		$path = [ $this->file->normalizedName ];
 		while ($current->ancestor !== null) {
 			$current = $current->ancestor;
 			$path[] = $current->name;
