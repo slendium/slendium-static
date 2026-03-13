@@ -68,12 +68,12 @@ final class Configs {
 	 * @param ConfigsMap $configs
 	 */
 	public static function getLocales(ArrayAccess|array $configs): ILocaleList {
-		if (isset($configs[self::KEY_LOCALES]) && $configs[self::KEY_LOCALES] instanceof LocaleList) {
+		if (isset($configs[self::KEY_LOCALES]) && $configs[self::KEY_LOCALES] instanceof ILocaleList) {
 			return $configs[self::KEY_LOCALES];
 		}
 
 		return (self::getIterable($configs, self::KEY_LOCALES) ?? [ ])
-			|> (fn($x) => Iteration::map($x, self::parseLocale(...)))
+			|> (fn($x) => Iteration::map($x, Locale::fromMixed(...)))
 			|> (fn($x) => Iteration::filterType($x, ILocale::class))
 			|> (fn($x) => new LocaleList($x));
 	}
@@ -96,14 +96,6 @@ final class Configs {
 		return isset($configs[self::KEY_TITLE_TEMPLATE]) && $configs[self::KEY_TITLE_TEMPLATE] instanceof TitleTemplate
 			? $configs[self::KEY_TITLE_TEMPLATE]
 			: new ClosureTitleTemplate(static fn($baseTitle) => $baseTitle);
-	}
-
-	private static function parseLocale(mixed $value): ?ILocale {
-		return $value instanceof ILocale
-			? $value
-			: (\is_string($value)
-			? Locale::parse($value)
-			: null);
 	}
 
 	/**
