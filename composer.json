@@ -7,7 +7,7 @@
 		"php": "^8.5",
 		"ext-libxml": "*",
 		"ext-dom": "*",
-		"slendium/compositor": "^0.1",
+		"slendium/compositor": "^0.2",
 		"erusev/parsedown": "^1.8"
 	},
 	"require-dev": {
