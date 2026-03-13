@@ -16,9 +16,8 @@ to generate the site. The generated site will be located in the `public` folder.
 
 1. **[Done]** Static pages based on HTML or Markdown only
 1. Include a global script and stylesheet if available
-1. Use .php files to generate pages in any format
 1. Integrate compositor library
 1. Support for multi-locale sites
-1. Page generators (for pagination of blogs, product pages, or something similar)
+1. Page generation (for pagination of blogs, product pages, or similar)
 1. Auto-optimized images with support for cropping based on screen size
-1. Forms (submitted externally)
+1. Validating site integrity by checking all internal links
