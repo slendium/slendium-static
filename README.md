@@ -15,9 +15,10 @@ to generate the site. The generated site will be located in the `public` folder.
 ## Roadmap
 
 1. **[Done]** Static pages based on HTML or Markdown only
-1. Include a global script and stylesheet if available
+1. Include a global stylesheet
 1. Integrate compositor library
 1. Support for multi-locale sites
 1. Page generation (for pagination of blogs, product pages, or similar)
+1. Integrate JS/CSS minification strategies
 1. Auto-optimized images with support for cropping based on screen size
 1. Validating site integrity by checking all internal links
