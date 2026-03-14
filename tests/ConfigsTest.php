@@ -14,6 +14,7 @@ use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Filesystem;
 use Slendium\SlendiumStaticTests\Source\Mocks\MemoryFilesystem;
 
@@ -128,6 +129,36 @@ class ConfigsTest extends TestCase {
 
 		$this->assertInstanceOf(TitleTemplate::class, $result);
 		$this->assertSame($expectedTitle, $result->createTitle($expectedTitle));
+	}
+
+	public function test_getBaseUri_shouldReturnSameInstance_whenConfigured(): void {
+		$uri = new Uri([ 'static', 'stylesheet.css' ]);
+		$configs = new ConfigsBuilder()
+			->setBaseUri($uri)
+			->build();
+
+		$result = Configs::getBaseUri($configs);
+
+		$this->assertSame($uri, $result);
+	}
+
+	public function test_getBaseUri_shouldReturnParsedInstance_whenConfiguredAsString(): void {
+		$uri = '/static/stylesheet.css';
+		$configs = new ConfigsBuilder()
+			->setBaseUri($uri)
+			->build();
+
+		$result = Configs::getBaseUri($configs);
+
+		$this->assertSame($uri, (string)$result);
+	}
+
+	public function test_getBaseUri_shouldReturnRootInstance_whenOmitted(): void {
+		$configs = new ConfigsBuilder()->build();
+
+		$result = Configs::getBaseUri($configs);
+
+		$this->assertSame('/', (string)$result);
 	}
 
 }

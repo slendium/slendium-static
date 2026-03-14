@@ -15,6 +15,7 @@ use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Filesystem;
 use Slendium\SlendiumStatic\Source\RealFilesystem;
 
@@ -40,6 +41,9 @@ final class Configs {
 
 	/** @since 1.0 */
 	const KEY_SUMMARIZER = 'summarizer';
+
+	/** @since 1.0 */
+	const KEY_BASE_URI = 'baseUri';
 
 	/**
 	 * @since 1.0
@@ -96,6 +100,22 @@ final class Configs {
 		return isset($configs[self::KEY_TITLE_TEMPLATE]) && $configs[self::KEY_TITLE_TEMPLATE] instanceof TitleTemplate
 			? $configs[self::KEY_TITLE_TEMPLATE]
 			: new ClosureTitleTemplate(static fn($baseTitle) => $baseTitle);
+	}
+
+	/**
+	 * @since 1.0
+	 * @param ConfigsMap $configs
+	 */
+	public static function getBaseUri(ArrayAccess|array $configs): Uri {
+		$value = isset($configs[self::KEY_BASE_URI])
+			? $configs[self::KEY_BASE_URI]
+			: null;
+
+		return match(true) {
+			$value instanceof Uri => $value,
+			\is_string($value) => Uri::fromString($value),
+			default => new Uri([ ])
+		};
 	}
 
 	/**

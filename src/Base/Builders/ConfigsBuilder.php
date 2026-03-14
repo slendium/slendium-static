@@ -11,6 +11,7 @@ use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Filesystem;
 
 /**
@@ -79,6 +80,17 @@ class ConfigsBuilder {
 		$this->values[Configs::KEY_TITLE_TEMPLATE] = $template instanceof Closure
 			? new ClosureTitleTemplate($template)
 			: $template;
+		return $this;
+	}
+
+	/**
+	 * @since 1.0
+	 * @return $this
+	 */
+	public function setBaseUri(Uri|string $uri): self {
+		$this->values[Configs::KEY_BASE_URI] = \is_string($uri)
+			? Uri::fromString($uri)
+			: $uri;
 		return $this;
 	}
 
