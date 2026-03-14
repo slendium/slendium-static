@@ -9,6 +9,22 @@ namespace Slendium\SlendiumStatic\Site;
  */
 final class Uri {
 
+	/** @since 1.0 */
+	public static function fromString(string $value): self {
+		$pathEnd = \strpos($value, '?');
+		if ($pathEnd === false) {
+			$pathEnd = \strpos($value, '#');
+		}
+		if ($pathEnd === false) {
+			$pathEnd = null;
+		}
+
+		return \substr($value, 0, $pathEnd)
+			|> (fn($x) => \trim($x, '/'))
+			|> (fn($x) => $x === '' ? [ ] : \explode('/', $x))
+			|> (fn($x) => new self($x));
+	}
+
 	/** @internal */
 	public function __construct(
 
