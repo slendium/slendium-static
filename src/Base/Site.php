@@ -7,7 +7,7 @@ use Override;
 
 use Slendium\SlendiumStatic\Pathed;
 use Slendium\SlendiumStatic\Site as ISite;
-use Slendium\SlendiumStatic\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Source\Filesystem;
 

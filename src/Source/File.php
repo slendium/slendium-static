@@ -7,7 +7,7 @@ use Exception;
 use SplFileInfo;
 
 use Slendium\SlendiumStatic\Configs;
-use Slendium\SlendiumStatic\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\Resource;
 
 /**
  * @internal

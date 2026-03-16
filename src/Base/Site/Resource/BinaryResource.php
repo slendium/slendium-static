@@ -1,10 +1,10 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Site\Resource;
+namespace Slendium\SlendiumStatic\Base\Site\Resource;
 
 use Override;
 
-use Slendium\SlendiumStatic\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Source\File;
 
 /**

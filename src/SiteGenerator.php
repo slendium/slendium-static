@@ -8,7 +8,7 @@ use Exception;
 use Slendium\SlendiumStatic\Base\Pathed;
 use Slendium\SlendiumStatic\Site as ISite;
 use Slendium\SlendiumStatic\Base\Site;
-use Slendium\SlendiumStatic\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Source\Directory;
 use Slendium\SlendiumStatic\Source\Filesystem;
 
@@ -70,7 +70,7 @@ class SiteGenerator {
 		foreach ($sourceContents as $resourcePath => $resource) {
 			if ($resource instanceof Resource) {
 				$resources[] = $resource;
-			} else {
+			} else if ($resource instanceof Exception) {
 				$errors[] = new Pathed($resourcePath, $resource);
 			}
 		}
