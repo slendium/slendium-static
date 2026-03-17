@@ -36,6 +36,7 @@ final class Uri {
 
 	) { }
 
+	/** @return non-empty-string */
 	public function __toString(): string {
 		return '/'.\implode('/', $this->path);
 	}
