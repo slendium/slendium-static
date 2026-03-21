@@ -18,6 +18,7 @@ use Slendium\SlendiumStatic\Content\SectionNames;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
+use Slendium\SlendiumStatic\Site\KnownUris;
 
 /**
  * @since 1.0
@@ -122,6 +123,7 @@ class PlainDocumentTemplate implements DocumentTemplate {
 			.'<head>'
 				.'<meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">'
 				.'<title></title>'
+				.'<link rel=stylesheet href="'.KnownUris::MainStylesheet().'">'
 				.'<meta name=generator content="github.com/slendium/slendium-static">'
 				.($meta !== null ? $meta->getHtml() : '')
 			.'</head>'
