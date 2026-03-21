@@ -22,7 +22,8 @@ final class Uri {
 		return \substr($value, 0, $pathEnd)
 			|> (fn($x) => \trim($x, '/'))
 			|> (fn($x) => $x === '' ? [ ] : \explode('/', $x))
-			|> (fn($x) => new self($x));
+			|> (fn($x) => \array_filter($x, static fn($v) => $v !== ''))
+			|> (fn($x) => new self(\array_values($x)));
 	}
 
 	/** @internal */
@@ -30,7 +31,7 @@ final class Uri {
 
 		/**
 		 * @since 1.0
-		 * @var list<string>
+		 * @var list<non-empty-string>
 		 */
 		public readonly array $path,
 

@@ -16,10 +16,13 @@ class UriTest extends TestCase {
 
 	public static function fromStringCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ '/', [ ] ];
+		yield [ '//', [ ] ];
 		yield [ '', [ ] ];
 		yield [ 'tmp', [ 'tmp' ] ];
 		yield [ '/tmp', [ 'tmp' ] ];
 		yield [ '/tmp/tmp', [ 'tmp', 'tmp' ] ];
+		yield [ '/tmp//tmp', [ 'tmp', 'tmp' ] ];
+		yield [ '//tmp///tmp/', [ 'tmp', 'tmp' ] ];
 		yield [ '/tmp?a=b', [ 'tmp' ] ];
 		yield [ 'tmp#tmp', [ 'tmp' ] ];
 		yield [ 'tmp?a=b#tmp', [ 'tmp' ] ];
@@ -42,6 +45,7 @@ class UriTest extends TestCase {
 		yield [ [ '' ], '/' ];
 	}
 
+	/** @param list<non-empty-string> $parts */
 	#[DataProvider('toStringCases')]
 	public function test_toString_shouldPrefixWithSlash(array $parts, string $expectedResult): void {
 		$sut = new Uri($parts);
