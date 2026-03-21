@@ -4,10 +4,12 @@ namespace Slendium\SlendiumStatic\Source;
 
 use ArrayAccess;
 use Exception;
+use Override;
 use SplFileInfo;
 
-use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Base\Site\Resource;
+use Slendium\SlendiumStatic\Configs;
+use Slendium\SlendiumStatic\Site\Resource as IResource;
 
 /**
  * @internal
@@ -15,7 +17,7 @@ use Slendium\SlendiumStatic\Base\Site\Resource;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-final class File {
+final class File implements Copyable {
 
 	public string $path {
 		get => $this->fileInfo->getRealPath();
@@ -44,14 +46,19 @@ final class File {
 	private readonly SplFileInfo $fileInfo;
 
 	/** Keeps a cache of the results of `toResource()` */
-	private Exception|Resource|null $resource = null;
+	private Exception|IResource|null $resource = null;
 
 	public function __construct(string $path, public readonly Directory $directory) {
 		$this->fileInfo = new SplFileInfo($path);
 	}
 
+	#[Override]
+	public function copyTo(Path $target): Exception|true {
+		return $this->directory->filesystem->copyFile($this->path, $target);
+	}
+
 	/** @param ConfigsMap $configs */
-	public function toResource(ArrayAccess|array $configs): Exception|Resource {
+	public function toResource(ArrayAccess|array $configs): Exception|IResource {
 		return $this->resource ??= Resource::fromFile($configs, $this);
 	}
 
