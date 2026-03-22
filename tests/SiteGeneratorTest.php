@@ -13,6 +13,8 @@ use Slendium\SlendiumStatic\Base\Content\ArraySectionProvider;
 use Slendium\SlendiumStatic\Base\Content\HtmlSection;
 use Slendium\SlendiumStatic\Common\HtmlParser;
 use Slendium\SlendiumStatic\Content\SectionNames;
+use Slendium\SlendiumStatic\Site\KnownUris;
+use Slendium\SlendiumStatic\Site\UriInfo;
 use Slendium\SlendiumStaticTests\Base\Content\Fixtures\SectionProviderFixtures;
 use Slendium\SlendiumStaticTests\Source\Mocks\MemoryFilesystem;
 
@@ -65,7 +67,7 @@ class SiteGeneratorTest extends TestCase {
 		// Assert
 		$this->assertTrue($result);
 		$this->assertSame(4, $fs->readCount);
-		$this->assertSame(4, \count($fs->writes));
+		$this->assertGreaterThan(4, \count($fs->writes)); // GreaterThan due to additional files being generated
 		$document = HtmlParser::parse($fs->writes[0]); // all files are the same
 		$this->assertSame($metaGuid, $document->querySelector('meta[name=title]')->getAttribute('content'));
 		$this->assertSame($headerGuid, $document->querySelector('span.header')->textContent);
@@ -74,7 +76,7 @@ class SiteGeneratorTest extends TestCase {
 
 	public function test_create_save_shouldTriggerCopyFile_whenEncounteringBinaryFile(): void {
 		// Arrange
-		$files = [ 'tmp' => [ 'index.html' => '', 'invoice.pdf' => '' ] ];
+		$files = [ 'tmp' => [ 'index.html' => '', 'file.bin' => '' ] ];
 		$fs = new class($files) extends MemoryFilesystem {
 
 			public bool $copied = false;
@@ -102,6 +104,35 @@ class SiteGeneratorTest extends TestCase {
 		// Assert
 		$this->assertTrue($result);
 		$this->assertTrue($fs->copied);
+	}
+
+	public function test_create_save_shouldAutoIncludeStyles(): void {
+		$fs = new MemoryFilesystem([ 'tmp' => [ 'index.html' => '' ] ]);
+		$configs = new ConfigsBuilder()
+			->setFilesystem($fs)
+			->build();
+		$site = new SiteGenerator($configs)->create('tmp');
+
+		$site->save('out');
+		$result = $site->map->get(KnownUris::MainStylesheet())->generateContents();
+
+		$this->assertTrue(\is_string($result) && $result !== '');
+	}
+
+	public function test_create_save_shouldMergeUserStylesWithGeneratedStyles(): void {
+		$salt = 'dc87b7aa-e0d1-490e-8182-d3dd39191ff0';
+		$uri = KnownUris::MainStylesheet();
+		$fs = new MemoryFilesystem([ ]);
+		$fs->addFileFromRoot([ 'tmp', ...UriInfo::getDirnames($uri) ], UriInfo::getTail($uri), $salt);
+		$configs = new ConfigsBuilder()
+			->setFilesystem($fs)
+			->build();
+		$site = new SiteGenerator($configs)->create('tmp');
+
+		$site->save('out');
+		$result = $site->map->get(KnownUris::MainStylesheet())->generateContents();
+
+		$this->assertTrue(\is_string($result) && \strpos($result, $salt) !== false);
 	}
 
 }
