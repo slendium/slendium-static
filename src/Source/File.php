@@ -20,7 +20,7 @@ use Slendium\SlendiumStatic\Site\Resource as IResource;
 final class File implements Copyable {
 
 	public string $path {
-		get => $this->fileInfo->getRealPath();
+		get => $this->fileInfo->getPathname();
 	}
 
 	public string $name {
@@ -36,7 +36,7 @@ final class File implements Copyable {
 	}
 
 	public string $normalizedPath {
-		get => $this->fileInfo->getPath().$this->normalizedName;
+		get => $this->fileInfo->getPath().'/'.$this->normalizedName;
 	}
 
 	public string $sourcePath {
