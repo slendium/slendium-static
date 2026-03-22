@@ -9,6 +9,7 @@ use Override;
 use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Site\Resource as IResource;
 use Slendium\SlendiumStatic\Site\Uri;
+use Slendium\SlendiumStatic\Source\Copyable;
 use Slendium\SlendiumStatic\Source\File;
 
 /**
@@ -23,9 +24,10 @@ abstract class Resource implements IResource {
 	 * @internal
 	 * @param ConfigsMap $configs
 	 */
-	public static function fromFile(ArrayAccess|array $configs, File $file): Exception|self {
+	public static function fromFile(ArrayAccess|array $configs, File $file): Exception|IResource {
 		return match($file->extension) {
 			'html', 'htm', 'md' => Resource\Page::fromFile($configs, $file),
+			'css' => Resource\Stylesheet::fromFile($file),
 			default => new Resource\BinaryResource($configs, $file)
 		};
 	}
@@ -44,7 +46,8 @@ abstract class Resource implements IResource {
 
 	) { }
 
-	public abstract function generateContents(): File|Exception|string;
+	#[Override]
+	public abstract function generateContents(): Copyable|Exception|string;
 
 	private function get_uri(): Uri {
 		$current = $this->file->directory;
@@ -54,7 +57,7 @@ abstract class Resource implements IResource {
 			$path[] = $current->name;
 		}
 
-		return new Uri(\array_reverse($path));
+		return new Uri(\array_reverse($path)); // @phpstan-ignore argument.type (wont contain empty strings)
 	}
 
 }
