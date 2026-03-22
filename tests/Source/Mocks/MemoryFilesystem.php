@@ -55,6 +55,20 @@ class MemoryFilesystem implements Filesystem {
 		return new Exception('Memory filesystem does not support copying');
 	}
 
+	/** @param list<non-empty-string> $directories */
+	public function addFileFromRoot(array $directories, string $filename, string $contents): void {
+		$root = $this->structure;
+		$current =& $root;
+		foreach ($directories as $name) {
+			if (!isset($current[$name]) || !\is_array($current[$name])) {
+				$current[$name] = [ ];
+			}
+			$current =& $current[$name];
+		}
+		$current[$filename] = $contents;
+		$this->structure = $root;
+	}
+
 	/** @return array<string,mixed>|string|null An array represents a directory, a string a file, `null` not found */
 	private function findNode(string $path): array|string|null {
 		$path = \trim($path, '/');
