@@ -16,39 +16,43 @@ use Slendium\SlendiumStatic\Source\PathInfo;
 final class PathInfoTest extends TestCase {
 
 	public static function getExtensionCases(): iterable { // @phpstan-ignore missingType.iterableValue
-		yield [ Path::fromString('test.txt'), 'txt' ];
-		yield [ Path::fromString('/'), '' ];
-		yield [ Path::fromString('/tmp/index.html'), 'html' ];
-		yield [ Path::fromString('/tmp/inner/index.test.html'), 'html' ];
-		yield [ Path::fromString('/test.'), '' ];
-		yield [ Path::fromString('/.test'), 'test' ];
+		yield [ 'test.txt', 'txt' ];
+		yield [ '/', '' ];
+		yield [ '/tmp/index.html', 'html' ];
+		yield [ '/tmp/inner/index.test.html', 'html' ];
+		yield [ '/test.', '' ];
+		yield [ '/.test', 'test' ];
 	}
 
 	#[DataProvider('getExtensionCases')]
-	public function test_getExtension_shouldReturnExpectedResult(Path $path, string $expectedResult): void {
+	public function test_getExtension_shouldReturnExpectedResult(string $unixPath, string $expectedResult): void {
+		$path = Path::fromUnix($unixPath);
+
 		$result = PathInfo::getExtension($path);
 
 		$this->assertSame($expectedResult, $result);
 	}
 
 	public static function getBasenameCases(): iterable { // @phpstan-ignore missingType.iterableValue
-		yield [ Path::fromString('/'), '', '' ];
-		yield [ Path::fromString('/'), '.txt', '' ];
-		yield [ Path::fromString('/tmp'), '', 'tmp' ];
-		yield [ Path::fromString('/tmp'), '.txt', 'tmp' ];
-		yield [ Path::fromString('/tmp'), 'tmp', '' ];
-		yield [ Path::fromString('/tmp.txt'), '', 'tmp.txt' ];
-		yield [ Path::fromString('/tmp.txt'), '.html', 'tmp.txt' ];
-		yield [ Path::fromString('/tmp.txt'), '.txt', 'tmp' ];
-		yield [ Path::fromString('/tmp/inner/test.txt'), '', 'test.txt' ];
-		yield [ Path::fromString('/tmp/inner/test.txt'), '.txt', 'test' ];
-		yield [ Path::fromString('/tmp/inner/test.txt'), 'test.txt', '' ];
-		yield [ Path::fromString('/tmp/inner/test.txt'), 'inner/test.txt', 'test.txt' ];
-		yield [ Path::fromString('/tmp/inner/test.txt'), 'random', 'test.txt' ];
+		yield [ '/', '', '' ];
+		yield [ '/', '.txt', '' ];
+		yield [ '/tmp', '', 'tmp' ];
+		yield [ '/tmp', '.txt', 'tmp' ];
+		yield [ '/tmp', 'tmp', '' ];
+		yield [ '/tmp.txt', '', 'tmp.txt' ];
+		yield [ '/tmp.txt', '.html', 'tmp.txt' ];
+		yield [ '/tmp.txt', '.txt', 'tmp' ];
+		yield [ '/tmp/inner/test.txt', '', 'test.txt' ];
+		yield [ '/tmp/inner/test.txt', '.txt', 'test' ];
+		yield [ '/tmp/inner/test.txt', 'test.txt', '' ];
+		yield [ '/tmp/inner/test.txt', 'inner/test.txt', 'test.txt' ];
+		yield [ '/tmp/inner/test.txt', 'random', 'test.txt' ];
 	}
 
 	#[DataProvider('getBasenameCases')]
-	public function test_getBasename_shouldReturnExpectedResult(Path $path, string $suffix, string $expectedResult): void {
+	public function test_getBasename_shouldReturnExpectedResult(string $unixPath, string $suffix, string $expectedResult): void {
+		$path = Path::fromUnix($unixPath);
+
 		$result = PathInfo::getBasename($path, $suffix);
 
 		$this->assertSame($expectedResult, $result);
@@ -68,8 +72,8 @@ final class PathInfoTest extends TestCase {
 	}
 
 	#[DataProvider('getNormalizedNameCases')]
-	public function test_getNormalizedName(string $path, string $expectedResult): void {
-		$path = Path::fromString($path);
+	public function test_getNormalizedName(string $unixPath, string $expectedResult): void {
+		$path = Path::fromUnix($unixPath);
 
 		$result = PathInfo::getNormalizedName($path);
 
