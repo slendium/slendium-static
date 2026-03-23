@@ -74,6 +74,7 @@ class ConfigsBuilder {
 
 	/**
 	 * @since 1.0
+	 * @param TitleTemplate|Closure(string):string $template
 	 * @return $this
 	 */
 	public function setTitleTemplate(TitleTemplate|Closure $template): self {
