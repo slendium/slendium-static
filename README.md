@@ -4,7 +4,7 @@ Static website generator.
 
 ## Installation
 
-Requires **PHP >= 8.5**, [https://getcomposer.org](Composer) and [https://www.npmjs.com](npm). Simply
+Requires **PHP >= 8.5**, [Composer](https://getcomposer.org) and [npm](https://www.npmjs.com). Simply
 run `composer install slendium/slendium-static` to add it to your project.
 
 ## Usage
