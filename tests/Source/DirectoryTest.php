@@ -36,7 +36,7 @@ class DirectoryTest extends TestCase {
 		$this->assertFalse($pathFlagged);
 	}
 
-	public static function sourceExceptionCases(): iterable {
+	public static function sourceExceptionCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		// ambiguous, both files correspond to index.html and BOTH should resolve to a SourceException
 		yield [ new MemoryFilesystem([ 'tmp' => [ 'index.htm' => '', 'index.html' => '' ] ]) ];
 		// page name cannot be empty

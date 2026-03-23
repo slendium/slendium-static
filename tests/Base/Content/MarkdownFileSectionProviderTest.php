@@ -22,7 +22,10 @@ class MarkdownFileSectionProviderTest extends TestCase {
 		$expectedOutput = '<p>This text is <strong>bold</strong></p>';
 		$sut = new MarkdownFileSectionProvider($markdown);
 
-		$result = $sut->getSection(SectionNames::MAIN)->getHtml();
+		$section = $sut->getSection(SectionNames::MAIN);
+		$this->assertInstanceOf(Section::class, $section);
+		/** @var Section $section */
+		$result = $section->getHtml();
 
 		$this->assertSame($expectedOutput, $result);
 	}

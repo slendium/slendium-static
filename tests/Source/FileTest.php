@@ -10,7 +10,7 @@ use Slendium\SlendiumStatic\Source\Directory;
 
 class FileTest extends TestCase {
 
-	public static function pathWithNormalizedNameCases(): iterable {
+	public static function pathWithNormalizedNameCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		// SplFileInfo::getFilename() returns the initial '/' when a file is in the filesystem root
 		// to ensure this bug never occurs again, both cases (root and non-root folder) are tested
 		foreach ([ '/tmp/', '/' ] as $path) {
@@ -32,7 +32,7 @@ class FileTest extends TestCase {
 		$this->assertSame($expectedNormalizedName, $result);
 	}
 
-	public static function fileWithSourcePathCases(): iterable {
+	public static function fileWithSourcePathCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ new File('root.html', new Directory('/')), 'root.html' ];
 		yield [ new File('index.html', new Directory('/tmp/')), 'index.html' ];
 		// the upper ancestor is the root folder, which should not appear in the source path

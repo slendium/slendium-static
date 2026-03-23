@@ -84,9 +84,9 @@ class ConfigsTest extends TestCase {
 		$result = Configs::getLocales($configs);
 
 		$this->assertInstanceOf(ILocaleList::class, $result);
-		$this->assertSame('fy', $result[0]->language);
-		$this->assertSame('nl', $result[1]->language);
-		$this->assertSame('en', $result[2]->language);
+		$this->assertSame('fy', $result[0]?->language);
+		$this->assertSame('nl', $result[1]?->language);
+		$this->assertSame('en', $result[2]?->language);
 	}
 
 	public function test_getSummarizer_shouldReturnGivenInstance_whenGiven(): void {

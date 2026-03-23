@@ -16,7 +16,7 @@ use Slendium\SlendiumStatic\Base\Content\DefaultSummarizer;
  */
 class DefaultSummarizerTest extends TestCase {
 
-	public static function summarizeCases(): iterable {
+	public static function summarizeCases(): iterable { // @phpstan-ignore missingType.iterableValue
 
 		yield [ HTMLDocument::createFromString(<<<WithMetaTitleAndDescription
 <!DOCTYPE html>

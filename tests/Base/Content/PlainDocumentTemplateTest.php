@@ -24,7 +24,7 @@ use Slendium\SlendiumStaticTests\Base\Content\Fixtures\SectionProviderFixtures;
  */
 class PlainDocumentTemplateTest extends TestCase {
 
-	public static function missingSectionsCases(): iterable {
+	public static function missingSectionsCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		$header = new HtmlSection('HEADER');
 		$main = new HtmlSection('MAIN');
 		$footer = new HtmlSection('FOOTER');
@@ -49,9 +49,9 @@ class PlainDocumentTemplateTest extends TestCase {
 			->build();
 		$sut = new PlainDocumentTemplate($configs);
 
-		$result = $sut->createDocument(SectionProviderFixtures::PlainWorkingProvider())
-			->querySelector('html')
-			->getAttribute('lang');
+		$doc = $sut->createDocument(SectionProviderFixtures::PlainWorkingProvider());
+		/** @var \Dom\HTMLDocument $doc */
+		$result = $doc->querySelector('html')?->getAttribute('lang');
 
 		// this test could technically succeed by coincidence if the system default locale is 'fy'
 		$this->assertSame($primaryLanguage, $result);
@@ -66,8 +66,9 @@ class PlainDocumentTemplateTest extends TestCase {
 		$sut = new PlainDocumentTemplate($configs);
 
 		$doc = $sut->createDocument(SectionProviderFixtures::PlainWorkingProvider());
-		$resultTitle = $doc->querySelector('meta[name=title]')->getAttribute('content');
-		$resultDescription = $doc->querySelector('meta[name=description]')->getAttribute('content');
+		/** @var \Dom\HTMLDocument $doc */
+		$resultTitle = $doc->querySelector('meta[name=title]')?->getAttribute('content');
+		$resultDescription = $doc->querySelector('meta[name=description]')?->getAttribute('content');
 
 		$this->assertSame($expectedTitle, $resultTitle);
 		$this->assertSame($expectedDescription, $resultDescription);
@@ -75,7 +76,7 @@ class PlainDocumentTemplateTest extends TestCase {
 
 	public function test_createDocument_shouldConsiderConfiguredTitleTemplate(): void {
 		$localTitle = '{59903fe5-9874-48dd-8aa6-1adbe60c5c1f}';
-		$template = static fn($title) => "before $title after";
+		$template = static fn(string $title) => "before $title after";
 		$expectedTitle = $template($localTitle);
 		$configs = new ConfigsBuilder()
 			->setSummarizer(new FixedValueSummarizer($localTitle, null))
@@ -84,7 +85,8 @@ class PlainDocumentTemplateTest extends TestCase {
 		$sut = new PlainDocumentTemplate($configs);
 
 		$doc = $sut->createDocument(SectionProviderFixtures::PlainWorkingProvider());
-		$result = $doc->querySelector('title')->textContent;
+		/** @var \Dom\HTMLDocument $doc */
+		$result = $doc->querySelector('title')?->textContent;
 
 		$this->assertSame($expectedTitle, $result);
 	}

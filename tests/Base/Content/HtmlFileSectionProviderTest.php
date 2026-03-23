@@ -46,7 +46,7 @@ HtmlFile;
 		$html = '<header><h1>Main contents</h1></header><p>A paragraph.</p>';
 		$sut = new HtmlFileSectionProvider($html);
 
-		$result = $sut->getSection(SectionNames::MAIN)->getHtml();
+		$result = $sut->getSection(SectionNames::MAIN)->getHtml(); // @phpstan-ignore method.nonObject
 
 		$this->assertSame($html, $result);
 	}
@@ -83,7 +83,7 @@ Whitespace;
 Whitespace;
 		$sut = new HtmlFileSectionProvider($html);
 
-		$result = $sut->getSection(SectionNames::MAIN)->getHtml();
+		$result = $sut->getSection(SectionNames::MAIN)->getHtml(); // @phpstan-ignore method.nonObject
 
 		$this->assertSame($expectedMainHtml, $result);
 	}
@@ -99,15 +99,16 @@ SplitMain;
 		$sut = new HtmlFileSectionProvider($html);
 
 		$result = HtmlParser::parse(
-			"<!DOCTYPE html>\n<html><body>".$sut->getSection(SectionNames::MAIN)->getHtml().'</body></html>'
+			"<!DOCTYPE html>\n<html><body>".$sut->getSection(SectionNames::MAIN)->getHtml().'</body></html>' // @phpstan-ignore method.nonObject
 		);
 
+		/** @var \Dom\HTMLDocument $result */
 		$this->assertSame(2, $result->querySelectorAll('p')->length);
 		$this->assertSame(1, $result->querySelectorAll('h1')->length);
-		$this->assertTrue($result->querySelector('h1')->nextSibling->tagName === 'P');
+		$this->assertTrue($result->querySelector('h1')?->nextElementSibling?->tagName === 'P');
 	}
 
-	public static function getSectionInvalidElementCases(): iterable {
+	public static function getSectionInvalidElementCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ '<html></html>' ];
 		yield [ '<head></head>' ];
 		yield [ '<body></body>' ];

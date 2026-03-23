@@ -38,16 +38,16 @@ class CallbackFilesystem implements Filesystem {
 		/** @var Closure(string):bool */
 		private readonly Closure $isFile = self::ALWAYS_FALSE,
 
-		/** @var Closure(string):Exception|iterable<string> */
+		/** @var Closure(string):(Exception|iterable<string>) */
 		private readonly Closure $scanDirectory = self::SCAN_DIRECTORY_EMPTY,
 
-		/** @var Closure(string):Exception|string */
+		/** @var Closure(string):(Exception|string) */
 		private readonly Closure $readFile = self::READ_EXCEPTION,
 
-		/** @var Closure(string,string):Exception|true */
+		/** @var Closure(string,string):(Exception|true) */
 		private readonly Closure $writeFile = self::WRITE_EXCEPTION,
 
-		/** @var Closure(string,string):Exception|true */
+		/** @var Closure(string,string):(Exception|true) */
 		private readonly Closure $copyFile = self::COPY_EXCEPTION,
 
 	) { }

@@ -15,7 +15,15 @@ use Slendium\SlendiumStatic\Content\Summarizer;
  */
 class FixedValueSummarizer implements Summarizer {
 
-	public function __construct(private readonly ?string $title, private readonly ?string $description) { }
+	public function __construct(
+
+		/** @var non-empty-string */
+		private readonly ?string $title,
+
+		/** @var non-empty-string */
+		private readonly ?string $description,
+
+	) { }
 
 	#[Override]
 	public function summarize(HTMLDocument $document): Summary {

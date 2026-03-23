@@ -32,6 +32,7 @@ class SiteGeneratorTest extends TestCase {
 
 			public int $readCount = 0;
 
+			/** @var list<string> */
 			public array $writes = [ ];
 
 			#[Override]
@@ -69,9 +70,10 @@ class SiteGeneratorTest extends TestCase {
 		$this->assertSame(4, $fs->readCount);
 		$this->assertGreaterThan(4, \count($fs->writes)); // GreaterThan due to additional files being generated
 		$document = HtmlParser::parse($fs->writes[0]); // all files are the same
-		$this->assertSame($metaGuid, $document->querySelector('meta[name=title]')->getAttribute('content'));
-		$this->assertSame($headerGuid, $document->querySelector('span.header')->textContent);
-		$this->assertSame($footerGuid, $document->querySelector('span.footer')->textContent);
+		/** @var \Dom\HTMLDocument $document */
+		$this->assertSame($metaGuid, $document->querySelector('meta[name=title]')?->getAttribute('content'));
+		$this->assertSame($headerGuid, $document->querySelector('span.header')?->textContent);
+		$this->assertSame($footerGuid, $document->querySelector('span.footer')?->textContent);
 	}
 
 	public function test_create_save_shouldTriggerCopyFile_whenEncounteringBinaryFile(): void {
@@ -87,7 +89,7 @@ class SiteGeneratorTest extends TestCase {
 			}
 
 			#[Override]
-			public function copyFile(string $sourcePath, string $targetPath): Exception {
+			public function copyFile(string $sourcePath, string $targetPath): Exception|true {
 				$this->copied = true;
 				return parent::copyFile($sourcePath, $targetPath);
 			}
@@ -123,7 +125,7 @@ class SiteGeneratorTest extends TestCase {
 		$salt = 'dc87b7aa-e0d1-490e-8182-d3dd39191ff0';
 		$uri = KnownUris::MainStylesheet();
 		$fs = new MemoryFilesystem([ ]);
-		$fs->addFileFromRoot([ 'tmp', ...UriInfo::getDirnames($uri) ], UriInfo::getTail($uri), $salt);
+		$fs->addFileFromRoot([ 'tmp', ...UriInfo::getDirnames($uri) ], UriInfo::getTail($uri), $salt); // @phpstan-ignore argument.type (tail won't be NULL)
 		$configs = new ConfigsBuilder()
 			->setFilesystem($fs)
 			->build();

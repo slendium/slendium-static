@@ -55,7 +55,7 @@ class PathTest extends TestCase {
 		yield [ [ 'tmp', '..', 'inner' ] ];
 	}
 
-	/** @param list<string> $parts */
+	/** @param list<non-empty-string> $parts */
 	#[DataProvider('constructThrowCases')]
 	public function test_construct_shouldThrow_whenContainingRelativeParts(array $parts): void {
 		// Assert

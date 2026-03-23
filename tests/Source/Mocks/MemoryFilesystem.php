@@ -69,14 +69,14 @@ class MemoryFilesystem implements Filesystem {
 		$this->structure = $root;
 	}
 
-	/** @return array<string,mixed>|string|null An array represents a directory, a string a file, `null` not found */
+	/** @return array<mixed>|string|null An array represents a directory, a string a file, `null` not found */
 	private function findNode(string $path): array|string|null {
 		$path = \trim($path, '/');
 		if ($path === '') {
 			return $this->structure;
 		}
 
-		$parts = \mb_split('\\/', $path);
+		$parts = \mb_split('\\/', $path); /** @var list<string> $parts */
 		$current = $this->structure;
 		foreach ($parts as $part) {
 			$current = \is_array($current) && isset($current[$part])

@@ -10,13 +10,19 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 use Slendium\SlendiumStatic\Common\Iteration;
 
+/**
+ * @internal
+ * @author C. Fahner
+ * @copyright Slendium 2026
+ */
 class IterationTest extends TestCase {
 
-	public static function firstOrNullCases(): iterable {
+	public static function firstOrNullCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 0, 1, 2, 3 ], 0 ];
 		yield [ [ ], null ];
 	}
 
+	/** @param iterable<mixed> $source */
 	#[DataProvider('firstOrNullCases')]
 	public function test_firstOrNull_returnsExpectedItem(iterable $source, mixed $expectedResult): void {
 		$result = Iteration::firstOrNull($source);
@@ -24,12 +30,13 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
-	public static function firstOrNullPredicateCases(): iterable {
+	public static function firstOrNullPredicateCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 0, 1, 2, 3 ], fn($v) => $v === 1, 1 ];
 		yield [ [ 0, 1, 2, 3 ], fn($v) => $v === 5, null ];
 		yield [ [ ], fn($v) => $v === 2, null ];
 	}
 
+	/** @param iterable<mixed> $source */
 	#[DataProvider('firstOrNullPredicateCases')]
 	public function test_firstOrNull_returnsExpectedItem_whenPredicateGiven(iterable $source, Closure $predicate, mixed $expectedResult): void {
 		$result = Iteration::firstOrNull($source, $predicate);
@@ -37,12 +44,13 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
-	public static function allCases(): iterable {
+	public static function allCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 0, 1, 2, 3, 4 ], fn($v) => \is_int($v), true ];
 		yield [ [ ], fn($v) => \is_int($v), true ];
 		yield [ [ 0, 1, '2', 3, 4 ], fn($v) => \is_int($v), false ];
 	}
 
+	/** @param iterable<mixed> $source */
 	#[DataProvider('allCases')]
 	public function test_all_returnsExpectedValue(iterable $source, Closure $predicate, bool $expectedResult): void {
 		$result = Iteration::all($source, $predicate);
@@ -50,11 +58,12 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
-	public static function anyCases(): iterable {
+	public static function anyCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 1, 2, 3 ], true ];
 		yield [ [ ], false ];
 	}
 
+	/** @param iterable<mixed> $source */
 	#[DataProvider('anyCases')]
 	public function test_any_returnsExpectedValue_whenPredicateNotGiven(iterable $source, bool $expectedResult): void {
 		$result = Iteration::any($source);
@@ -62,12 +71,13 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
-	public static function anyPredicateCases(): iterable {
+	public static function anyPredicateCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ null, 0, 1, 2 ], fn($v) => \is_int($v), true ];
 		yield [ [ ], fn($v) => \is_int($v), false ];
 		yield [ [ 0, 1, 2, 3, 4 ], fn($v) => \is_string($v), false ];
 	}
 
+	/** @param iterable<mixed> $source */
 	#[DataProvider('anyPredicateCases')]
 	public function test_any_returnsExpectedValue_whenPredicateGiven(iterable $source, Closure $predicate, bool $expectedResult): void {
 		$result = Iteration::any($source, $predicate);
@@ -117,13 +127,14 @@ class IterationTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
-	public static function implodeCases(): iterable {
+	public static function implodeCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ ], ',', '' ];
 		yield [ [ 1 ], ',', '1' ];
 		yield [ [ 'a', 'b' ], ',', 'a,b' ];
 		yield [ [ 'a', 'b' ], '', 'ab' ];
 	}
 
+	/** @param iterable<\Stringable|string|float|int> $source */
 	#[DataProvider('implodeCases')]
 	public function test_implode_returnsImplodedValue(iterable $source, string $separator, string $expectedResult): void {
 		$result = Iteration::implode($source, $separator);
