@@ -4,14 +4,15 @@ Static website generator.
 
 ## Installation
 
-Requires **PHP >= 8.5**. Simply run `composer install slendium/slendium-static` to add it to your project.
+Requires **PHP >= 8.5**, [https://getcomposer.org](Composer) and [https://www.npmjs.com](npm). Simply
+run `composer install slendium/slendium-static` to add it to your project.
 
 ## Usage
 
 Create a `content/` directory and a `slendium-static.php` configuration file in the root of your project.
 Each file in the `content/` directory corresponds to a page of the generated site. Pages can be created
 using either HTML or Markdown. Running the script at `vendor/bin/generate-site` will generate the site
-in the default `public/` directory.
+in the `public/` directory.
 
 ## Examples
 
@@ -22,13 +23,8 @@ return an `ArrayAccess|array` where each key is a configuration name. Use the `C
 type-safe configuration, as in the example below.
 
 ```php
-use Slendium\SlendiumStatic\Base\Builders\ConfigsBuilder;
-use Slendium\SlendiumStatic\Base\Content\ArraySectionProvider;
-use Slendium\SlendiumStatic\Base\Content\HtmlSection;
-use Slendium\SlendiumStatic\Content\SectionNames;
-
 return new ConfigsBuilder()
-	->setTitleTemplate(fn($localTitle) => "$localTitle - My Website")
+	->setTitleTemplate(static fn($localTitle) => "$localTitle - My Website")
 	->setBaseSectionProvider(new ArraySectionProvider([
 		SectionNames::HEADER => new HtmlSection('Enter your header-HTML here'),
 		SectionNames::FOOTER => new HtmlSection('Enter your footer-HTML here'),
