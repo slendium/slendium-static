@@ -2,7 +2,6 @@
 
 namespace Slendium\SlendiumStatic\Content;
 
-use NoDiscard;
 use Dom\HTMLDocument;
 
 /**
@@ -21,7 +20,6 @@ interface Summarizer {
 	 *
 	 * @since 1.0
 	 */
-	#[NoDiscard]
 	public function summarize(HTMLDocument $document): Summary;
 
 }
