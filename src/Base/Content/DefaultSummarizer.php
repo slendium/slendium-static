@@ -2,6 +2,7 @@
 
 namespace Slendium\SlendiumStatic\Base\Content;
 
+use NoDiscard;
 use Override;
 use Dom\HTMLDocument;
 
@@ -52,7 +53,7 @@ class DefaultSummarizer implements Summarizer {
 		return null;
 	}
 
-	#[Override]
+	#[Override, NoDiscard]
 	public function summarize(HTMLDocument $document): Summary {
 		return new Summary(self::findTitle($document), self::findDescription($document));
 	}
