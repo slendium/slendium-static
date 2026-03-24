@@ -48,15 +48,12 @@ final class Site implements ISite {
 			return $postProcessResult;
 		}
 
-		$path = \rtrim($path, \DIRECTORY_SEPARATOR)
-			|> (fn($x) => \str_replace(\DIRECTORY_SEPARATOR, '/', $x));
-
 		foreach ($this->map as $resource) {
 			$contents = $resource->generateContents();
 			if (\is_string($contents)) {
 				$this->filesystem->writeFile($path.(new Path($resource->uri->path)), $contents);
 			} else if ($contents instanceof Copyable) {
-				$contents->copyTo(Path::fromUnix($path.(new Path($resource->uri->path))));
+				$contents->copyTo(Path::fromString($path.(new Path($resource->uri->path))));
 			} else {
 				return $contents;
 			}

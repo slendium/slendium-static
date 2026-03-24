@@ -24,26 +24,15 @@ class PathTest extends TestCase {
 		yield [ "{$separator}tmp{$separator}test.html", [ 'tmp', 'test.html' ] ];
 	}
 
-	public static function unixPathCases(): iterable { // @phpstan-ignore missingType.iterableValue
+	public static function fromStringCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield from self::pathCases(Path::UNIX_SEPARATOR);
-	}
-
-	/** @param list<string> $expectedResult */
-	#[DataProvider('unixPathCases')]
-	public function test_fromUnix_shouldProduceValidPath(string $path, array $expectedResult): void {
-		$result = Path::fromUnix($path)->parts;
-
-		$this->assertSame($expectedResult, $result);
-	}
-
-	public static function windowsPathCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield from self::pathCases(Path::WINDOWS_SEPARATOR);
 	}
 
 	/** @param list<string> $expectedResult */
-	#[DataProvider('windowsPathCases')]
-	public function test_fromWindows_shouldProduceValidPath(string $path, array $expectedResult): void {
-		$result = Path::fromWindows($path)->parts;
+	#[DataProvider('fromStringCases')]
+	public function test_fromString_shouldReturnExpectedResult(string $path, array $expectedResult): void {
+		$result = Path::fromString($path)->parts;
 
 		$this->assertSame($expectedResult, $result);
 	}

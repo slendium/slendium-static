@@ -25,8 +25,8 @@ final class PathInfoTest extends TestCase {
 	}
 
 	#[DataProvider('getExtensionCases')]
-	public function test_getExtension_shouldReturnExpectedResult(string $unixPath, string $expectedResult): void {
-		$path = Path::fromUnix($unixPath);
+	public function test_getExtension_shouldReturnExpectedResult(string $path, string $expectedResult): void {
+		$path = Path::fromString($path);
 
 		$result = PathInfo::getExtension($path);
 
@@ -50,8 +50,8 @@ final class PathInfoTest extends TestCase {
 	}
 
 	#[DataProvider('getBasenameCases')]
-	public function test_getBasename_shouldReturnExpectedResult(string $unixPath, string $suffix, string $expectedResult): void {
-		$path = Path::fromUnix($unixPath);
+	public function test_getBasename_shouldReturnExpectedResult(string $path, string $suffix, string $expectedResult): void {
+		$path = Path::fromString($path);
 
 		$result = PathInfo::getBasename($path, $suffix);
 
@@ -72,8 +72,8 @@ final class PathInfoTest extends TestCase {
 	}
 
 	#[DataProvider('getNormalizedNameCases')]
-	public function test_getNormalizedName(string $unixPath, string $expectedResult): void {
-		$path = Path::fromUnix($unixPath);
+	public function test_getNormalizedName(string $path, string $expectedResult): void {
+		$path = Path::fromString($path);
 
 		$result = PathInfo::getNormalizedName($path);
 

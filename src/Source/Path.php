@@ -16,22 +16,13 @@ final class Path {
 	const WINDOWS_SEPARATOR = '\\';
 
 	/** @since 1.0 */
-	public static function fromUnix(string $path): self {
-		return self::fromString($path, self::UNIX_SEPARATOR);
-	}
-
-	/** @since 1.0 */
-	public static function fromWindows(string $path): self {
-		return self::fromString($path, self::WINDOWS_SEPARATOR);
-	}
-
-	/** @param non-empty-string $separator */
-	private static function fromString(string $path, string $separator): self {
-		$parts = \trim($path, $separator)
-			|> (fn($x) => $x === '' ? [ ] : \explode($separator, $x))
-			|> (fn($x) => \array_filter($x, static fn($v) => $v !== ''));
-
-		return new self(\array_values($parts));
+	public static function fromString(string $path): self {
+		return \trim($path)
+			|> (static fn($x) => \trim($x, self::UNIX_SEPARATOR.self::WINDOWS_SEPARATOR))
+			|> (static fn($x) => \str_replace(self::WINDOWS_SEPARATOR, self::UNIX_SEPARATOR, $x))
+			|> (static fn($x) => $x === '' ? [ ] : \explode(self::UNIX_SEPARATOR, $x))
+			|> (static fn($x) => \array_filter($x, static fn($v) => $v !== ''))
+			|> (static fn($x) => new self(\array_values($x)));
 	}
 
 	/** @since 1.0 */
