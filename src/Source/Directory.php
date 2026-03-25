@@ -7,7 +7,7 @@ use Exception;
 use NoDiscard;
 
 use Slendium\SlendiumStatic\Configs;
-use Slendium\SlendiumStatic\Base\Pathed;
+use Slendium\SlendiumStatic\Base\Source\Pathed;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Site\Resource;
 

@@ -5,7 +5,6 @@ namespace Slendium\SlendiumStatic\Base;
 use Exception;
 use Override;
 
-use Slendium\SlendiumStatic\Pathed;
 use Slendium\SlendiumStatic\Site as ISite;
 use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Site\KnownUris;
@@ -15,6 +14,7 @@ use Slendium\SlendiumStatic\Source\Copyable;
 use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Source\Filesystem;
 use Slendium\SlendiumStatic\Source\Path;
+use Slendium\SlendiumStatic\Source\Pathed;
 
 /**
  * @internal

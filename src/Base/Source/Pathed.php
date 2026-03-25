@@ -1,10 +1,10 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Base;
+namespace Slendium\SlendiumStatic\Base\Source;
 
 use Override;
 
-use Slendium\SlendiumStatic\Pathed as IPathed;
+use Slendium\SlendiumStatic\Source\Pathed as IPathed;
 
 /**
  * @internal

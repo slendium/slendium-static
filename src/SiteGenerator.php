@@ -5,7 +5,7 @@ namespace Slendium\SlendiumStatic;
 use ArrayAccess;
 use Exception;
 
-use Slendium\SlendiumStatic\Base\Pathed;
+use Slendium\SlendiumStatic\Base\Source\Pathed;
 use Slendium\SlendiumStatic\Site as ISite;
 use Slendium\SlendiumStatic\Base\Site;
 use Slendium\SlendiumStatic\Site\Resource;

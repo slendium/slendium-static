@@ -4,6 +4,8 @@ namespace Slendium\SlendiumStatic;
 
 use Exception;
 
+use Slendium\SlendiumStatic\Source\Pathed;
+
 /**
  * A completed collection of site {@see Resource}'s that can be saved to a directory.
  *

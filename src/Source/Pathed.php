@@ -1,6 +1,6 @@
 <?php
 
-namespace Slendium\SlendiumStatic;
+namespace Slendium\SlendiumStatic\Source;
 
 /**
  * Container for values associated with a specific path on the filesystem.
