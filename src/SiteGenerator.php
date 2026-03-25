@@ -6,11 +6,12 @@ use ArrayAccess;
 use Exception;
 
 use Slendium\SlendiumStatic\Base\Source\Pathed;
-use Slendium\SlendiumStatic\Site as ISite;
 use Slendium\SlendiumStatic\Base\Site;
+use Slendium\SlendiumStatic\Site as ISite;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Source\Directory;
 use Slendium\SlendiumStatic\Source\Filesystem;
+use Slendium\SlendiumStatic\Source\Path;
 
 /**
  * @since 1.0
@@ -71,7 +72,7 @@ class SiteGenerator {
 			if ($resource instanceof Resource) {
 				$resources[] = $resource;
 			} else {
-				$errors[] = new Pathed($resourcePath, $resource);
+				$errors[] = new Pathed(Path::fromString($resourcePath), $resource);
 			}
 		}
 		return new Site($errors, $resources, $this->filesystem);

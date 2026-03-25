@@ -3,7 +3,7 @@
 namespace Slendium\SlendiumStatic\Source;
 
 /**
- * Container for values associated with a specific path on the filesystem.
+ * Container for values associated with a path.
  *
  * @since 1.0
  * @template T
@@ -13,7 +13,7 @@ namespace Slendium\SlendiumStatic\Source;
 interface Pathed {
 
 	/** @since 1.0 */
-	public string $path { get; }
+	public Path $path { get; }
 
 	/**
 	 * @since 1.0

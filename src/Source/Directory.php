@@ -10,6 +10,7 @@ use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Base\Source\Pathed;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Site\Resource;
+use Slendium\SlendiumStatic\Source\Path;
 
 /**
  * @internal
@@ -85,7 +86,7 @@ final class Directory {
 			if ($errorOrFile instanceof Exception) {
 				yield $path => $errorOrFile;
 			} else {
-				$files[$path] = $errorOrFile;
+				$files[(string)$path] = $errorOrFile;
 			}
 		}
 		yield from self::convertFilesToResources($files, $configs);
@@ -111,7 +112,7 @@ final class Directory {
 	private function initializeContents(): array {
 		$contents = $this->filesystem->scanDirectory($this->path);
 		if ($contents instanceof Exception) {
-			return [ new Pathed($this->path, $contents) ]; // @phpstan-ignore return.type (Pathed<Exception> is technically not covariant but it doesnt matter here)
+			return [ new Pathed(Path::fromString($this->path), $contents) ]; // @phpstan-ignore return.type (Pathed<Exception> is technically not covariant but it doesnt matter here)
 		}
 
 		return $contents
@@ -123,7 +124,7 @@ final class Directory {
 	/** @return Pathed<Exception|File|self> */
 	private function resolveSubPath(string $subPath): Pathed {
 		$path = "{$this->path}/$subPath";
-		return new Pathed($path, $this->resolvePath($path));
+		return new Pathed(Path::fromString($path), $this->resolvePath($path));
 	}
 
 	private function resolvePath(string $path): Exception|File|self {

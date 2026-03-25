@@ -4,6 +4,7 @@ namespace Slendium\SlendiumStatic\Base\Source;
 
 use Override;
 
+use Slendium\SlendiumStatic\Source\Path;
 use Slendium\SlendiumStatic\Source\Pathed as IPathed;
 
 /**
@@ -18,7 +19,7 @@ final class Pathed implements IPathed {
 	public function __construct(
 
 		#[Override]
-		public readonly string $path,
+		public readonly Path $path,
 
 		/** @var T */
 		#[Override]
