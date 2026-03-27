@@ -10,46 +10,61 @@ use SplFileInfo;
 use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Site\Resource as IResource;
+use Slendium\SlendiumStatic\Source\Path;
+use Slendium\SlendiumStatic\Source\PathInfo;
 
 /**
- * @internal
+ * @since 1.0
  * @phpstan-import-type ConfigsMap from Configs
  * @author C. Fahner
  * @copyright Slendium 2026
  */
 final class File implements Copyable {
 
-	public string $path {
-		get => $this->fileInfo->getPathname();
+	/** @since 1.0 */
+	public Path $path {
+		get => $this->path ??= $this->init_path();
 	}
 
-	public string $name {
-		get => $this->fileInfo->getBasename();
-	}
-
+	/** @internal @deprecated */
 	public string $extension {
-		get => $this->fileInfo->getExtension();
+		get => PathInfo::getExtension($this->path);
 	}
 
+	/** @internal @deprecated */
 	public string $normalizedName {
-		get => $this->get_normalizedName();
+		get => PathInfo::getNormalizedName($this->path);
 	}
 
+	/** @internal @deprecated */
 	public string $normalizedPath {
-		get => $this->fileInfo->getPath().'/'.$this->normalizedName;
+		get => \dirname($this->path).'/'.$this->normalizedName;
 	}
 
+	/** @internal @deprecated */
 	public string $sourcePath {
 		get => \trim("{$this->directory->sourcePath}{$this->name}", '/');
 	}
 
-	private readonly SplFileInfo $fileInfo;
-
 	/** Keeps a cache of the results of `toResource()` */
 	private Exception|IResource|null $resource = null;
 
-	public function __construct(string $path, public readonly Directory $directory) {
-		$this->fileInfo = new SplFileInfo($path);
+	/** @since 1.0 */
+	public function __construct(
+
+		/** @since 1.0 */
+		public readonly Directory $directory,
+
+		/**
+		 * @since 1.0
+		 * @var non-empty-string
+		 */
+		public readonly string $name,
+
+	) { }
+
+	public function __debugInfo(): array {
+		return [ 'path' => (string)$this->path ];
 	}
 
 	#[Override]
@@ -57,22 +72,29 @@ final class File implements Copyable {
 		return $this->directory->filesystem->copyFile($this->path, $target);
 	}
 
-	/** @param ConfigsMap $configs */
+	/**
+	 * @internal
+	 * @param ConfigsMap $configs
+	 */
 	public function toResource(ArrayAccess|array $configs): Exception|IResource {
 		return $this->resource ??= Resource::fromFile($configs, $this);
 	}
 
+	/** @internal */
 	public function getContents(): Exception|string {
 		return $this->directory->filesystem->readFile($this->path);
 	}
 
-	private function get_normalizedName(): string {
-		return match($this->extension) {
-			'htm' => $this->fileInfo->getBasename('.htm').'.html',
-			'md' => $this->fileInfo->getBasename('.md').'.html',
-			'jpeg' => $this->fileInfo->getBasename('.jpeg').'.jpg',
-			default => $this->name,
-		};
+	private function init_path(): Path {
+		$parts = [ $this->name ];
+
+		$current = $this->directory;
+		while ($current !== null) {
+			$parts[] = $current->name;
+			$current = $current->ancestor;
+		}
+
+		return new Path(\array_reverse($parts));
 	}
 
 }

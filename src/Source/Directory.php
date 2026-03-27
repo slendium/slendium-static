@@ -20,8 +20,9 @@ use Slendium\SlendiumStatic\Source\Path;
  */
 final class Directory {
 
+	/** @var non-empty-string */
 	public string $name {
-		get => \basename($this->path);
+		get => \basename($this->path); // @phpstan-ignore return.type
 	}
 
 	/** Returns a path relative to the root source directory, ends with a '/' */
@@ -130,7 +131,7 @@ final class Directory {
 	private function resolvePath(string $path): Exception|File|self {
 		return match(true) {
 			$this->filesystem->isDirectory($path) => new Directory($path, $this, $this->filesystem),
-			$this->filesystem->isFile($path) => new File($path, directory: $this),
+			$this->filesystem->isFile($path) => new File($this, \basename($path)), // @phpstan-ignore argument.type
 			default => new SourceException("Item `$path` requested from `{$this->path}` does not exist")
 		};
 	}
