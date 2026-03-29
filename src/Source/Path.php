@@ -40,6 +40,18 @@ final class Path {
 		}
 	}
 
+	/**
+	 * @since 1.0
+	 * @param iterable<non-empty-string> $parts
+	 */
+	public function append(iterable $parts): self {
+		$newParts = $this->parts;
+		foreach ($parts as $part) {
+			$newParts[] = $part;
+		}
+		return new self($newParts);
+	}
+
 	/** @return non-empty-string */
 	public function __toString() {
 		return \DIRECTORY_SEPARATOR.\implode(\DIRECTORY_SEPARATOR, $this->parts);

@@ -71,4 +71,25 @@ class PathTest extends TestCase {
 		$this->assertSame($expectedResult, $result);
 	}
 
+	/** @return iterable<array{0: Path, 1: list<non-empty-string>, 2: list<non-empty-string> }> */
+	public static function appendCases(): iterable {
+		yield [ new Path([ ]), [ ], [ ] ];
+		yield [ new Path([ ]), [ 'tmp' ], [ 'tmp' ] ];
+		yield [ new path([ ]), [ 'tmp', 'inner' ], [ 'tmp', 'inner' ] ];
+		yield [ new Path([ 'tmp' ]), [ ], [ 'tmp' ] ];
+		yield [ new Path([ 'tmp' ]), [ 'inner' ], [ 'tmp', 'inner' ] ];
+		yield [ new Path([ 'tmp', 'inner' ]), [ ], [ 'tmp', 'inner' ] ];
+	}
+
+	/**
+	 * @param list<non-empty-string> $append
+	 * @param list<non-empty-string> $expectedResult
+	 */
+	#[DataProvider('appendCases')]
+	public function test_append_shouldProduceExpectedResult(Path $sut, array $append, array $expectedResult): void {
+		$result = $sut->append($append)->parts;
+
+		$this->assertSame($expectedResult, $result);
+	}
+
 }
