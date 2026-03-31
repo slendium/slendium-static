@@ -62,7 +62,7 @@ class ConfigsTest extends TestCase {
 
 		$result = Configs::getBaseSectionProvider($configs);
 
-		$this->assertNotNull($result);
+		$this->assertInstanceOf(SectionProvider::class, $result);
 	}
 
 	public function test_getLocales_shouldReturnLocaleListInstance_whenLocaleListGiven(): void {
