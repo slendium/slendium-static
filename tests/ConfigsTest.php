@@ -57,12 +57,12 @@ class ConfigsTest extends TestCase {
 		$this->assertSame($expectedSectionProvider, $result);
 	}
 
-	public function test_getBaseSectionProvider_shouldReturnNull_whenOmitted(): void {
+	public function test_getBaseSectionProvider_shouldReturnSomething_whenOmitted(): void {
 		$configs = new ConfigsBuilder()->build();
 
 		$result = Configs::getBaseSectionProvider($configs);
 
-		$this->assertNull($result);
+		$this->assertNotNull($result);
 	}
 
 	public function test_getLocales_shouldReturnLocaleListInstance_whenLocaleListGiven(): void {

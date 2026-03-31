@@ -9,6 +9,7 @@ use Slendium\Localization\Base\LocaleList;
 use Slendium\Localization\Locale as ILocale;
 use Slendium\Localization\LocaleList as ILocaleList;
 
+use Slendium\SlendiumStatic\Base\Content\ArraySectionProvider;
 use Slendium\SlendiumStatic\Base\Content\ClosureTitleTemplate;
 use Slendium\SlendiumStatic\Base\Content\DefaultSummarizer;
 use Slendium\SlendiumStatic\Common\Iteration;
@@ -61,10 +62,10 @@ final class Configs {
 	 * @see self::KEY_BASE_SECTIONS
 	 * @param ConfigsMap $configs
 	 */
-	public static function getBaseSectionProvider(ArrayAccess|array $configs): ?SectionProvider {
+	public static function getBaseSectionProvider(ArrayAccess|array $configs): SectionProvider {
 		return isset($configs[self::KEY_BASE_SECTIONS]) && $configs[self::KEY_BASE_SECTIONS] instanceof SectionProvider
 			? $configs[self::KEY_BASE_SECTIONS]
-			: null;
+			: new ArraySectionProvider([ ]);
 	}
 
 	/**
