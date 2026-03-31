@@ -11,19 +11,20 @@ use Exception;
  */
 class SourceException extends Exception {
 
-	public static function forAmbiguousResource(File $file): self {
-		return new self("Ambiguous resource, `{$file->normalizedName}` can be created from multiple files");
+	/** @param list<string> $paths */
+	public static function forAmbiguousResource(string $uri, array $paths): Exception {
+		return new self("Ambiguous resource, `$uri` can be created from multiple files: ".\implode(', ', $paths));
 	}
 
-	public static function forUnnamedResource(File $file): self {
+	public static function forUnnamedResource(File $file): Exception {
 		return new self("Resource at `{$file->sourcePath}` should have a non-empty name");
 	}
 
-	public static function forOrphanedResource(File $file): self {
-		$ancestorPath = ($file->directory->ancestor->sourcePath ?? '')
-			."{$file->directory->name}.{$file->extension}";
+	//~ public static function forOrphanedResource(File $file): self {
+		//~ $ancestorPath = ($file->directory->ancestor->sourcePath ?? '')
+			//~ ."{$file->directory->name}.{$file->extension}";
 
-		return new self("Resource at `{$file->sourcePath}` should have an ancestor at `$ancestorPath`");
-	}
+		//~ return new self("Resource at `{$file->sourcePath}` should have an ancestor at `$ancestorPath`");
+	//~ }
 
 }
