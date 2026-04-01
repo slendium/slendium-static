@@ -20,6 +20,32 @@ use Slendium\SlendiumStaticTests\Site\Mocks\PlainResource;
  */
 class MapTest extends TestCase {
 
+	/** @return iterable<array{0: Map, 1: int<0,max>}> */
+	public static function countCases(): iterable {
+		$res1 = new EmptyResource('/index.html');
+		$res2 = new EmptyResource('/news.html');
+		yield [ new Map([ ]), 0 ];
+		yield [ new Map([ $res1 ]), 1 ];
+		yield [ new Map([ $res1, $res2 ]), 2 ];
+	}
+
+	#[DataProvider('countCases')]
+	public function test_count_shouldReturnExpectedValue(Map $sut, int $expectedResult): void {
+		$result = \count($sut);
+
+		$this->assertSame($expectedResult, $result);
+	}
+
+	#[DataProvider('countCases')]
+	public function test_iterate_shouldHaveExpectedIterations(Map $sut, int $expectedResult): void {
+		$result = 0;
+		foreach ($sut as $entry) {
+			$result += 1;
+		}
+
+		$this->assertSame($expectedResult, $result);
+	}
+
 	public static function containsCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		$index = new EmptyResource('/index.html');
 		$map = new Map([ $index ]);

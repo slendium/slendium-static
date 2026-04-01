@@ -3,6 +3,7 @@
 namespace Slendium\SlendiumStatic\Site;
 
 use ArrayAccess;
+use Countable;
 use Traversable;
 
 /**
@@ -11,7 +12,7 @@ use Traversable;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-interface Map extends Traversable {
+interface Map extends Countable, Traversable {
 
 	/** @since 1.0 */
 	public function contains(Resource|Uri $value): bool;

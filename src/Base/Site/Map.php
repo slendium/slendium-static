@@ -45,6 +45,11 @@ final class Map implements IMap, IteratorAggregate {
 	}
 
 	#[Override]
+	public function count(): int {
+		return \count($this->values);
+	}
+
+	#[Override]
 	public function getIterator(): Traversable {
 		foreach ($this->values as $uriString => $resource) {
 			yield $uriString => $resource;
