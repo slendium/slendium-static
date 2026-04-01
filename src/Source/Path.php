@@ -40,11 +40,15 @@ final class Path {
 		}
 	}
 
+	public function __debugInfo(): array {
+		return [ 'path' => (string)$this ];
+	}
+
 	/**
 	 * @since 1.0
-	 * @param iterable<non-empty-string> $parts
+	 * @param non-empty-string $parts
 	 */
-	public function append(iterable $parts): self {
+	public function append(string ...$parts): self {
 		$newParts = $this->parts;
 		foreach ($parts as $part) {
 			$newParts[] = $part;

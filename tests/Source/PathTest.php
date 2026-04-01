@@ -87,7 +87,7 @@ class PathTest extends TestCase {
 	 */
 	#[DataProvider('appendCases')]
 	public function test_append_shouldProduceExpectedResult(Path $sut, array $append, array $expectedResult): void {
-		$result = $sut->append($append)->parts;
+		$result = $sut->append(...$append)->parts;
 
 		$this->assertSame($expectedResult, $result);
 	}
