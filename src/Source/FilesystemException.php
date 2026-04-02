@@ -5,7 +5,7 @@ namespace Slendium\SlendiumStatic\Source;
 use Exception;
 
 /**
- * @internal
+ * @since 1.0
  * @author C. Fahner
  * @copyright Slendium 2026
  */
