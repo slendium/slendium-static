@@ -1,10 +1,14 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Source;
+namespace Slendium\SlendiumStatic\Base\Source;
 
 use Exception;
 use Override;
 
+use Slendium\SlendiumStatic\Source\Directory;
+use Slendium\SlendiumStatic\Source\File;
+use Slendium\SlendiumStatic\Source\Filesystem;
+use Slendium\SlendiumStatic\Source\FilesystemException;
 use Slendium\SlendiumStatic\Source\Path;
 
 /**
@@ -12,14 +16,14 @@ use Slendium\SlendiumStatic\Source\Path;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-class RealFilesystem implements Filesystem {
+class NativeFilesystem implements Filesystem {
 
 	#[Override]
 	public function scanDirectory(Path $path): Exception|iterable {
 		$contents = \scandir($path);
 		/** @var list<non-empty-string>|false $contents */
 		return $contents === false
-			? new FilesystemException("An error occurred while scanning directory `$path`")
+			? FilesystemException::forScanDirectoryError($path)
 			: $this->resolveScandirResults(new Directory($this, $path), $contents);
 	}
 
@@ -27,7 +31,7 @@ class RealFilesystem implements Filesystem {
 	public function readFile(Path $path): Exception|string {
 		$contents = \file_get_contents($path);
 		return $contents === false
-			? new FilesystemException("An error occurred reading from file `$path`")
+			? FilesystemException::forReadFileError($path)
 			: $contents;
 	}
 
@@ -35,7 +39,7 @@ class RealFilesystem implements Filesystem {
 	public function writeFile(Path $path, string $contents): ?Exception {
 		$this->ensureDirExists($path);
 		return \file_put_contents($path, $contents) === false
-			? new FilesystemException("An error occurred writing to file `$path`")
+			? FilesystemException::forWriteFileError($path)
 			: null;
 	}
 
@@ -44,7 +48,7 @@ class RealFilesystem implements Filesystem {
 		$this->ensureDirExists($targetPath);
 		return \copy($sourcePath, $targetPath)
 			? null
-			: new FilesystemException("An error occurred copying `$sourcePath` to `$targetPath`");
+			: FilesystemException::forCopyFileError($sourcePath, $targetPath);
 	}
 
 	/**

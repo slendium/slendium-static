@@ -12,13 +12,13 @@ use Slendium\Localization\LocaleList as ILocaleList;
 use Slendium\SlendiumStatic\Base\Content\ArraySectionProvider;
 use Slendium\SlendiumStatic\Base\Content\ClosureTitleTemplate;
 use Slendium\SlendiumStatic\Base\Content\DefaultSummarizer;
+use Slendium\SlendiumStatic\Base\Source\NativeFilesystem;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Content\Summarizer;
 use Slendium\SlendiumStatic\Content\TitleTemplate;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Filesystem;
-use Slendium\SlendiumStatic\Source\RealFilesystem;
 
 /**
  * @since 1.0
@@ -54,7 +54,7 @@ final class Configs {
 	public static function getFilesystem(ArrayAccess|array $configs): Filesystem {
 		return isset($configs[self::KEY_FILESYSTEM]) && $configs[self::KEY_FILESYSTEM] instanceof Filesystem
 			? $configs[self::KEY_FILESYSTEM]
-			: new RealFilesystem;
+			: new NativeFilesystem;
 	}
 
 	/**
