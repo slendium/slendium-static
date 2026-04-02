@@ -15,6 +15,7 @@ use Slendium\SlendiumStatic\Common\HtmlParser;
 use Slendium\SlendiumStatic\Content\SectionNames;
 use Slendium\SlendiumStatic\Site\KnownUris;
 use Slendium\SlendiumStatic\Site\UriInfo;
+use Slendium\SlendiumStatic\Source\Path;
 use Slendium\SlendiumStaticTests\Base\Content\Fixtures\SectionProviderFixtures;
 use Slendium\SlendiumStaticTests\Source\Mocks\MemoryFilesystem;
 
@@ -24,6 +25,63 @@ use Slendium\SlendiumStaticTests\Source\Mocks\MemoryFilesystem;
  * @copyright Slendium 2026
  */
 class SiteGeneratorTest extends TestCase {
+
+	public function test_create_shouldGenerateExpectedAmountOfErrors_whenSourceHasAmbiguousResource(): void {
+		$files = new MemoryFilesystem([ 'tmp' => [ 'index.htm' => '', 'index.html' => '' ] ]);
+		$configs = new ConfigsBuilder()
+			->setBaseSectionProvider(SectionProviderFixtures::PlainWorkingProvider())
+			->setFilesystem($files)
+			->build();
+		$sut = new SiteGenerator($configs);
+
+		$result = $sut->create('/tmp');
+
+		$this->assertSame(2, \count($result->errors));
+		$this->assertNotSame((string)$result->errors[0]->path, (string)$result->errors[1]->path);
+		$this->assertSame(0, \count($result->map));
+	}
+
+	public function test_create_shouldHaveError_whenSourceHasUnnamedResources(): void {
+		$files = new MemoryFilesystem([ 'tmp' => [ '.html' => '' ] ]);
+		$configs = new ConfigsBuilder()
+			->setBaseSectionProvider(SectionProviderFixtures::PlainWorkingProvider())
+			->setFilesystem($files)
+			->build();
+		$sut = new SiteGenerator($configs);
+
+		$result = $sut->create('/tmp');
+
+		$this->assertSame(1, \count($result->errors));
+		$this->assertSame(0, \count($result->map));
+	}
+
+	public function test_create_shouldGenerateExpectedAmountOfResources(): void {
+		$filesystem = new MemoryFilesystem([ 'tmp' => [
+			'index.html' => '',
+			'blog.html' => '',
+			'terms.pdf' => '',
+			'blog' => [
+				// every folder with pages is required to have an ancestor page of the same name
+				'2025.html' => '',
+				'2026.html' => '',
+				// ensure no failure on two files with the same name in different subfolders
+				'2025' => [ 'article1.html' => '' ],
+				'2026' => [ 'article1.html' => '' ],
+				// ensure no failure on empty folders
+				'2027' => [ ],
+			],
+		] ]);
+		$configs = new ConfigsBuilder()
+			->setBaseSectionProvider(SectionProviderFixtures::PlainWorkingProvider())
+			->setFilesystem($filesystem)
+			->build();
+		$sut = new SiteGenerator($configs);
+
+		$result = $sut->create('/tmp');
+
+		$this->assertSame(0, \count($result->errors));
+		$this->assertSame(7, \count($result->map));
+	}
 
 	public function test_create_save_shouldReadAndWriteExpectedAmountsAndContents(): void {
 		// Arrange
@@ -36,15 +94,15 @@ class SiteGeneratorTest extends TestCase {
 			public array $writes = [ ];
 
 			#[Override]
-			public function readFile(string $path): string {
+			public function readFile(Path $path): string {
 				$this->readCount += 1;
 				return 'Main contents.';
 			}
 
 			#[Override]
-			public function writeFile(string $path, string $contents): true {
+			public function writeFile(Path $path, string $contents): null {
 				$this->writes[] = $contents;
-				return true;
+				return null;
 			}
 
 		};
@@ -84,12 +142,12 @@ class SiteGeneratorTest extends TestCase {
 			public bool $copied = false;
 
 			#[Override]
-			public function readFile(string $path): string {
+			public function readFile(Path $path): string {
 				return '<h1>Title</h1>';
 			}
 
 			#[Override]
-			public function copyFile(string $sourcePath, string $targetPath): Exception|true {
+			public function copyFile(Path $sourcePath, Path $targetPath): ?Exception {
 				$this->copied = true;
 				return parent::copyFile($sourcePath, $targetPath);
 			}

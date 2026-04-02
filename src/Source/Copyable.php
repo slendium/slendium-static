@@ -14,6 +14,6 @@ use Exception;
 interface Copyable {
 
 	/** @since 1.0 */
-	public function copyTo(Path $target): Exception|true;
+	public function copyTo(Path $target): ?Exception;
 
 }

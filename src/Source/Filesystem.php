@@ -13,25 +13,25 @@ use Exception;
  */
 interface Filesystem {
 
-	/** @since 1.0 */
-	public function isFile(string $path): bool;
-
-	/** @since 1.0 */
-	public function isDirectory(string $path): bool;
-
 	/**
+	 * Scans the directory and returns handles to its contents.
+	 *
+	 * This method doesn't return the current directory nor the one above it.
+	 *
+	 * An error is returned if the given path is not a directory or not readable.
+	 *
 	 * @since 1.0
-	 * @return Exception|iterable<string> An error or a list of file/directory names
+	 * @return Exception|iterable<Directory|File> An error or the directory contents
 	 */
-	public function scanDirectory(string $path): Exception|iterable;
+	public function scanDirectory(Path $path): Exception|iterable;
 
 	/** @since 1.0 */
-	public function readFile(string $path): Exception|string;
+	public function readFile(Path $path): Exception|string;
 
 	/** @since 1.0 */
-	public function writeFile(string $path, string $contents): Exception|true;
+	public function writeFile(Path $path, string $contents): ?Exception;
 
 	/** @since 1.0 */
-	public function copyFile(string $sourcePath, string $targetPath): Exception|true;
+	public function copyFile(Path $sourcePath, Path $targetPath): ?Exception;
 
 }

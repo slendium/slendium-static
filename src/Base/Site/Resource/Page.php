@@ -16,6 +16,7 @@ use Slendium\SlendiumStatic\Base\Content\PlainDocumentTemplate;
 use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Content\SectionProvider;
+use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Directory;
 use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Source\SourceException;
@@ -28,58 +29,23 @@ use Slendium\SlendiumStatic\Source\SourceException;
  */
 class Page extends Resource {
 
-	private readonly ?SectionProvider $baseSectionProvider;
+	public function __construct(
 
-	/** @param ConfigsMap $configs */
-	public static function fromFile(ArrayAccess|array $configs, File $file): Exception|self {
-		if ($file->directory->sourcePath === '/' && $file->normalizedName === 'index.html') {
-			return new self($configs, $file);
-		}
-
-		$ancestor = self::findAncestor($configs, $file);
-		if ($ancestor === null && $file->normalizedName !== 'index.html') {
-			return SourceException::forOrphanedResource($file);
-		}
-		return new self($configs, $file, $ancestor);
-	}
-
-	/** @param ConfigsMap $configs */
-	private static function findAncestor(ArrayAccess|array $configs, File $file): ?self {
-		$ancestorName = $file->directory->ancestor !== null
-			? "{$file->directory->name}.html"
-			: 'index.html';
-
-		$ancestor = ($file->directory->ancestor ?? $file->directory)->getContents()
-			|> (fn($x) => Iteration::map($x, fn($resolved) => $resolved->value))
-			|> (fn($x) => Iteration::filterType($x, File::class))
-			|> (fn($x) => Iteration::firstOrNull($x, fn($f) => $f->normalizedName === $ancestorName))
-			|> (fn($x) => $x?->toResource($configs));
-
-		return $ancestor instanceof self
-			? $ancestor
-			: null;
-	}
-
-	/** @param ConfigsMap $configs */
-	protected function __construct(
-
-		ArrayAccess|array $configs,
+		Uri $uri,
 
 		File $file,
 
-		public readonly ?self $ancestor = null,
+		private readonly SectionProvider $baseSectionProvider,
+
+		/** @var ConfigsMap */
+		private readonly ArrayAccess|array $configs,
 
 	) {
-		parent::__construct($configs, $file);
-		$this->baseSectionProvider = Configs::getBaseSectionProvider($configs);
+		parent::__construct($uri, $file);
 	}
 
 	#[Override]
 	public function generateContents(): Exception|string {
-		if ($this->baseSectionProvider === null) {
-			return new Exception('No base section provider configured');
-		}
-
 		$localSectionProvider = $this->getLocalSectionProvider();
 		if ($localSectionProvider instanceof Exception) {
 			return $localSectionProvider;

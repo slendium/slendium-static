@@ -5,6 +5,8 @@ namespace Slendium\SlendiumStatic\Source;
 use Exception;
 use Override;
 
+use Slendium\SlendiumStatic\Source\Path;
+
 /**
  * @internal
  * @author C. Fahner
@@ -13,25 +15,16 @@ use Override;
 class RealFilesystem implements Filesystem {
 
 	#[Override]
-	public function isFile(string $path): bool {
-		return \is_file($path);
-	}
-
-	#[Override]
-	public function isDirectory(string $path): bool {
-		return \is_dir($path);
-	}
-
-	#[Override]
-	public function scanDirectory(string $path): Exception|iterable {
+	public function scanDirectory(Path $path): Exception|iterable {
 		$contents = \scandir($path);
+		/** @var list<non-empty-string>|false $contents */
 		return $contents === false
-			? new FilesystemException("An error occurred when trying to scan directory `$path`")
-			: $contents;
+			? new FilesystemException("An error occurred while scanning directory `$path`")
+			: $this->resolveScandirResults(new Directory($this, $path), $contents);
 	}
 
 	#[Override]
-	public function readFile(string $path): Exception|string {
+	public function readFile(Path $path): Exception|string {
 		$contents = \file_get_contents($path);
 		return $contents === false
 			? new FilesystemException("An error occurred reading from file `$path`")
@@ -39,19 +32,38 @@ class RealFilesystem implements Filesystem {
 	}
 
 	#[Override]
-	public function writeFile(string $path, string $contents): Exception|true {
+	public function writeFile(Path $path, string $contents): ?Exception {
 		$this->ensureDirExists($path);
 		return \file_put_contents($path, $contents) === false
 			? new FilesystemException("An error occurred writing to file `$path`")
-			: true;
+			: null;
 	}
 
 	#[Override]
-	public function copyFile(string $sourcePath, string $targetPath): Exception|true {
+	public function copyFile(Path $sourcePath, Path $targetPath): ?Exception {
 		$this->ensureDirExists($targetPath);
 		return \copy($sourcePath, $targetPath)
-			? true
+			? null
 			: new FilesystemException("An error occurred copying `$sourcePath` to `$targetPath`");
+	}
+
+	/**
+	 * @param array<non-empty-string> $subPaths
+	 * @return iterable<Directory|File>
+	 */
+	private function resolveScandirResults(Directory $current, array $subPaths): iterable {
+		foreach ($subPaths as $subPath) {
+			if ($subPath === '.' || $subPath === '..') {
+				continue;
+			}
+
+			$absPath = $current->path->append($subPath);
+			if (\is_dir($absPath)) {
+				yield new Directory($this, $absPath);
+			} else if (\is_file($absPath)) {
+				yield new File($current, $subPath);
+			}
+		}
 	}
 
 	private function ensureDirExists(string $path): void {

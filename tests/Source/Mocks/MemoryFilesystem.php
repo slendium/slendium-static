@@ -6,7 +6,11 @@ use Exception;
 use Override;
 
 use Slendium\SlendiumStatic\Common\Iteration;
+use Slendium\SlendiumStatic\Source\Directory;
+use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Source\Filesystem;
+use Slendium\SlendiumStatic\Source\FilesystemException;
+use Slendium\SlendiumStatic\Source\Path;
 
 /** Forces a `/` directory separator. */
 class MemoryFilesystem implements Filesystem {
@@ -18,27 +22,22 @@ class MemoryFilesystem implements Filesystem {
 	public function __construct(private array $structure) { }
 
 	#[Override]
-	public function isDirectory(string $path): bool {
-		return \is_array($this->findNode($path));
-	}
-
-	#[Override]
-	public function isFile(string $path): bool {
-		return \is_string($this->findNode($path));
-	}
-
-	#[Override]
-	public function scanDirectory(string $path): Exception|iterable {
-		$dir = $this->findNode($path);
-		if (!\is_array($dir)) {
-			return new Exception("Directory `$path` not found");
+	public function scanDirectory(Path $path): Exception|iterable {
+		$node = $this->findNode($path);
+		if (!\is_array($node)) {
+			return new FilesystemException("Directory `$path` not found");
 		}
 
-		return \array_keys($dir);
+		$directory = new Directory($this, $path);
+		return Iteration::map($node, fn($value, $key) => match(true) {
+			\is_string($value) => new File($directory, $key),
+			\is_array($value) => new Directory($this, $path->append($key)),
+			default => throw new Exception('Unexpected value type in internal structure')
+		}) |> Iteration::toList(...);
 	}
 
 	#[Override]
-	public function readFile(string $path): Exception|string {
+	public function readFile(Path $path): Exception|string {
 		$file = $this->findNode($path);
 		return \is_string($file)
 			? $file
@@ -46,12 +45,12 @@ class MemoryFilesystem implements Filesystem {
 	}
 
 	#[Override]
-	public function writeFile(string $path, string $contents): Exception|true {
+	public function writeFile(Path $path, string $contents): ?Exception {
 		return new Exception('Memory filesystem is not writeable');
 	}
 
 	#[Override]
-	public function copyFile(string $sourcePath, string $targetPath): Exception|true {
+	public function copyFile(Path $sourcePath, Path $targetPath): ?Exception {
 		return new Exception('Memory filesystem does not support copying');
 	}
 
@@ -69,23 +68,33 @@ class MemoryFilesystem implements Filesystem {
 		$this->structure = $root;
 	}
 
-	/** @return array<mixed>|string|null An array represents a directory, a string a file, `null` not found */
-	private function findNode(string $path): array|string|null {
-		$path = \trim($path, '/');
-		if ($path === '') {
-			return $this->structure;
-		}
-
-		$parts = \mb_split('\\/', $path); /** @var list<string> $parts */
+	/** @return array<non-empty-string,mixed>|string|null An array represents a directory, a string a file, `null` not found */
+	private function findNode(Path $path): array|string|null {
 		$current = $this->structure;
-		foreach ($parts as $part) {
+		foreach ($path->parts as $part) {
 			$current = \is_array($current) && isset($current[$part])
 				? $current[$part]
 				: null;
 		}
-		return \is_array($current) || \is_string($current)
-			? $current
-			: null;
+		return match(true) {
+			\is_array($current) => self::ensureDirectoryArray($current),
+			\is_string($current) => $current,
+			default => null
+		};
+	}
+
+	/**
+	 * @param array<mixed> $array
+	 * @return array<non-empty-string,mixed>
+	 */
+	private static function ensureDirectoryArray(array $array): array {
+		$out = [ ];
+		foreach ($array as $k => $v) {
+			if ($k !== '') {
+				$out["$k"] = $v;
+			}
+		}
+		return $out;
 	}
 
 }

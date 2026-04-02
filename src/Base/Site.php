@@ -51,7 +51,7 @@ final class Site implements ISite {
 		foreach ($this->map as $resource) {
 			$contents = $resource->generateContents();
 			if (\is_string($contents)) {
-				$this->filesystem->writeFile($path.(new Path($resource->uri->path)), $contents);
+				$this->filesystem->writeFile(Path::fromString($path.(new Path($resource->uri->path))), $contents);
 			} else if ($contents instanceof Copyable) {
 				$contents->copyTo(Path::fromString($path.(new Path($resource->uri->path))));
 			} else {
