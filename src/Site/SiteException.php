@@ -1,6 +1,6 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Source;
+namespace Slendium\SlendiumStatic\Site;
 
 use Exception;
 
@@ -9,15 +9,15 @@ use Exception;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-class SourceException extends Exception {
+class SiteException extends Exception {
 
 	/** @param list<string> $paths */
 	public static function forAmbiguousResource(string $uri, array $paths): Exception {
 		return new self("Ambiguous resource, `$uri` can be created from multiple files: ".\implode(', ', $paths));
 	}
 
-	public static function forUnnamedResource(File $file): Exception {
-		return new self("Resource at `{$file->sourcePath}` should have a non-empty name");
+	public static function forUnnamedResource(string $path): Exception {
+		return new self("Resource at `$path` should have a non-empty name");
 	}
 
 }

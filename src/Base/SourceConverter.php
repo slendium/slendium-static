@@ -10,6 +10,7 @@ use Slendium\SlendiumStatic\Base\Site\Resource;
 use Slendium\SlendiumStatic\Base\Source\Pathed;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Site\Resource as IResource;
+use Slendium\SlendiumStatic\Site\SiteException;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Directory;
 use Slendium\SlendiumStatic\Source\File;
@@ -17,7 +18,6 @@ use Slendium\SlendiumStatic\Source\Filesystem;
 use Slendium\SlendiumStatic\Source\Pathed as IPathed;
 use Slendium\SlendiumStatic\Source\Path;
 use Slendium\SlendiumStatic\Source\PathInfo;
-use Slendium\SlendiumStatic\Source\SourceException;
 
 /**
  * @internal
@@ -63,7 +63,7 @@ class SourceConverter {
 			if (\count($entries) > 1) {
 				$paths = \array_map(static fn($entry) => $entry[0], $entries);
 				foreach ($entries as $entry) {
-					$errors[] = new Pathed($entry[0], SourceException::forAmbiguousResource($uri, $paths));
+					$errors[] = new Pathed($entry[0], SiteException::forAmbiguousResource($uri, $paths));
 				}
 			} else {
 				$resources[] = $entries[0][1];
@@ -97,7 +97,7 @@ class SourceConverter {
 		$name = PathInfo::getNormalizedName($file->path);
 		$extension = PathInfo::getExtension($file->path);
 		if ($name === '' || \mb_strlen($name) === \mb_strlen($extension) + 1) {
-			return SourceException::forUnnamedResource($file);
+			return SiteException::forUnnamedResource($file->path);
 		}
 
 		$uri = new Uri([ ...$uriPath, $name ]);

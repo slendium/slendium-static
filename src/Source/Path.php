@@ -38,7 +38,7 @@ final class Path {
 
 	) {
 		if (\array_find($parts, static fn($v) => $v === '.' || $v === '..') !== null) {
-			throw new SourceException('Path contained unexpected relative part');
+			throw new FilesystemException('Absolute path contained a relative part');
 		}
 	}
 
