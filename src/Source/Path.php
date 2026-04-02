@@ -3,6 +3,8 @@
 namespace Slendium\SlendiumStatic\Source;
 
 /**
+ * An absolute path in a filesystem.
+ *
  * @since 1.0
  * @author C. Fahner
  * @copyright Slendium 2026
