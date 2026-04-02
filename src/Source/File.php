@@ -54,7 +54,7 @@ final class File {
 
 	) { }
 
-	/** @internal */
+	/** @since 1.0 */
 	public function getContents(): Exception|string {
 		return $this->directory->filesystem->readFile($this->path);
 	}
