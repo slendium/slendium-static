@@ -6,7 +6,6 @@ use Closure;
 use Exception;
 use Override;
 
-use Slendium\SlendiumStatic\Source\Copyable;
 use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
@@ -32,7 +31,7 @@ final class Stylesheet implements Resource {
 	) { }
 
 	#[Override]
-	public function generateContents(): Copyable|Exception|string {
+	public function generateContents(): File|Exception|string {
 		return \count($this->prepends) > 0
 			? $this->generateModifiedContents()
 			: $this->source;

@@ -4,7 +4,7 @@ namespace Slendium\SlendiumStatic\Site;
 
 use Exception;
 
-use Slendium\SlendiumStatic\Source\Copyable;
+use Slendium\SlendiumStatic\Source\File;
 
 /**
  * A generic website resource.
@@ -19,6 +19,6 @@ interface Resource {
 	public Uri $uri { get; }
 
 	/** @since 1.0 */
-	public function generateContents(): Copyable|Exception|string;
+	public function generateContents(): File|Exception|string;
 
 }

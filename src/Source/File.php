@@ -13,7 +13,7 @@ use Slendium\SlendiumStatic\Source\PathInfo;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-final class File implements Copyable {
+final class File {
 
 	/** @since 1.0 */
 	public Path $path {
@@ -53,11 +53,6 @@ final class File implements Copyable {
 		public readonly string $name,
 
 	) { }
-
-	#[Override]
-	public function copyTo(Path $target): ?Exception {
-		return $this->directory->filesystem->copyFile($this->path, $target);
-	}
 
 	/** @internal */
 	public function getContents(): Exception|string {

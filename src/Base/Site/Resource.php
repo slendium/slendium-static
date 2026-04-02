@@ -8,7 +8,6 @@ use Override;
 
 use Slendium\SlendiumStatic\Site\Resource as IResource;
 use Slendium\SlendiumStatic\Site\Uri;
-use Slendium\SlendiumStatic\Source\Copyable;
 use Slendium\SlendiumStatic\Source\File;
 
 /**
@@ -28,6 +27,6 @@ abstract class Resource implements IResource {
 	) { }
 
 	#[Override]
-	public abstract function generateContents(): Copyable|Exception|string;
+	public abstract function generateContents(): File|Exception|string;
 
 }
