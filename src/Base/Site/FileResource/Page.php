@@ -1,6 +1,6 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Base\Site\Resource;
+namespace Slendium\SlendiumStatic\Base\Site\FileResource;
 
 use ArrayAccess;
 use Exception;
@@ -13,13 +13,12 @@ use Slendium\SlendiumStatic\Base\Content\ContentException;
 use Slendium\SlendiumStatic\Base\Content\HtmlFileSectionProvider;
 use Slendium\SlendiumStatic\Base\Content\MarkdownFileSectionProvider;
 use Slendium\SlendiumStatic\Base\Content\PlainDocumentTemplate;
-use Slendium\SlendiumStatic\Base\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\FileResource;
 use Slendium\SlendiumStatic\Common\Iteration;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Directory;
 use Slendium\SlendiumStatic\Source\File;
-use Slendium\SlendiumStatic\Source\SourceException;
 
 /**
  * @internal
@@ -27,7 +26,7 @@ use Slendium\SlendiumStatic\Source\SourceException;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-class Page extends Resource {
+class Page extends FileResource {
 
 	public function __construct(
 

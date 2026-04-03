@@ -6,10 +6,10 @@ use ArrayAccess;
 use Exception;
 
 use Slendium\SlendiumStatic\Configs;
-use Slendium\SlendiumStatic\Base\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\FileResource;
 use Slendium\SlendiumStatic\Base\Source\Pathed;
 use Slendium\SlendiumStatic\Content\SectionProvider;
-use Slendium\SlendiumStatic\Site\Resource as IResource;
+use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\SiteException;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\Directory;
@@ -47,7 +47,7 @@ class SourceConverter {
 
 		$directory = new Directory($this->filesystem, $path);
 		foreach ($this->convertDirectory($directory) as $path => $converted) {
-			if ($converted instanceof IResource) {
+			if ($converted instanceof Resource) {
 				if (isset($unique[(string)$converted->uri])) {
 					$unique[(string)$converted->uri][] = [ $path, $converted ];
 				} else {
@@ -74,7 +74,7 @@ class SourceConverter {
 
 	/**
 	 * @param list<non-empty-string> $uriPath
-	 * @return iterable<Path,IResource|Exception>
+	 * @return iterable<Path,Resource|Exception>
 	 */
 	public function convertDirectory(Directory $directory, array $uriPath = [ ]): iterable {
 		$contents = $directory->getContents();
@@ -93,7 +93,7 @@ class SourceConverter {
 	}
 
 	/** @param list<non-empty-string> $uriPath */
-	private function convertFile(File $file, array $uriPath): IResource|Exception {
+	private function convertFile(File $file, array $uriPath): Resource|Exception {
 		$name = PathInfo::getNormalizedName($file->path);
 		$extension = PathInfo::getExtension($file->path);
 		if ($name === '' || \mb_strlen($name) === \mb_strlen($extension) + 1) {
@@ -102,9 +102,9 @@ class SourceConverter {
 
 		$uri = new Uri([ ...$uriPath, $name ]);
 		return match($extension) {
-			'html', 'htm', 'md' => new Resource\Page($uri, $file, $this->baseSectionProvider, $this->configs),
-			'css' => new Resource\Stylesheet($uri, $file),
-			default => new Resource\BinaryResource($uri, $file)
+			'html', 'htm', 'md' => new FileResource\Page($uri, $file, $this->baseSectionProvider, $this->configs),
+			'css' => new \Slendium\SlendiumStatic\Base\Site\Resource\Stylesheet($uri, $file),
+			default => new FileResource($uri, $file)
 		};
 	}
 

@@ -6,7 +6,7 @@ use ArrayAccess;
 use Exception;
 use Override;
 
-use Slendium\SlendiumStatic\Site\Resource as IResource;
+use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\File;
 
@@ -15,7 +15,7 @@ use Slendium\SlendiumStatic\Source\File;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-abstract class Resource implements IResource {
+class FileResource implements Resource {
 
 	public function __construct(
 
@@ -27,6 +27,8 @@ abstract class Resource implements IResource {
 	) { }
 
 	#[Override]
-	public abstract function generateContents(): File|Exception|string;
+	public function generateContents(): File|Exception|string {
+		return $this->file;
+	}
 
 }
