@@ -6,10 +6,11 @@ use Exception;
 use Override;
 
 use Slendium\SlendiumStatic\Site as ISite;
-use Slendium\SlendiumStatic\Base\Site\Resource;
+use Slendium\SlendiumStatic\Base\Site\CommonStyles;
+use Slendium\SlendiumStatic\Base\Site\Stylesheet;
 use Slendium\SlendiumStatic\Site\KnownUris;
 use Slendium\SlendiumStatic\Site\MapSearch;
-use Slendium\SlendiumStatic\Site\Resource as IResource;
+use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Source\Copyable;
 use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Source\Filesystem;
@@ -26,7 +27,7 @@ final class Site implements ISite {
 	#[Override]
 	public readonly ISite\Map $map;
 
-	/** @param iterable<IResource> $resources */
+	/** @param iterable<Resource> $resources */
 	public function __construct(
 
 		/** @var list<Pathed<Exception>> */
@@ -62,19 +63,19 @@ final class Site implements ISite {
 	}
 
 	private function applyPostProcessing(Site\Map $map): Exception|true {
-		$defaultStyles = new Resource\Stylesheet\DefaultStylesheet(KnownUris::MainStylesheet());
+		$commonStyles = new CommonStyles(KnownUris::MainStylesheet());
 		if ($map->contains(KnownUris::MainStylesheet())) {
-			$userStyles = MapSearch::getResourceOfType($map, KnownUris::MainStylesheet(), Resource\Stylesheet::class);
+			$userStyles = MapSearch::getResourceOfType($map, KnownUris::MainStylesheet(), Stylesheet::class);
 			if ($userStyles === null) {
 				return new Exception('Unexpected resource type at URI `'.KnownUris::MainStylesheet().'`');
 			}
-			$defaultCss = $defaultStyles->generateContents();
-			if ($defaultCss instanceof Exception) {
-				return $defaultCss;
+			$commonCss = $commonStyles->generateContents();
+			if ($commonCss instanceof Exception) {
+				return $commonCss;
 			}
-			$userStyles->prepend($defaultCss);
+			$userStyles->prepend($commonCss);
 		} else {
-			$map->insert($defaultStyles);
+			$map->insert($commonStyles);
 		}
 		return true;
 	}

@@ -7,6 +7,7 @@ use Exception;
 
 use Slendium\SlendiumStatic\Configs;
 use Slendium\SlendiumStatic\Base\Site\FileResource;
+use Slendium\SlendiumStatic\Base\Site\Stylesheet;
 use Slendium\SlendiumStatic\Base\Source\Pathed;
 use Slendium\SlendiumStatic\Content\SectionProvider;
 use Slendium\SlendiumStatic\Site\Resource;
@@ -103,7 +104,7 @@ class SourceConverter {
 		$uri = new Uri([ ...$uriPath, $name ]);
 		return match($extension) {
 			'html', 'htm', 'md' => new FileResource\Page($uri, $file, $this->baseSectionProvider, $this->configs),
-			'css' => new \Slendium\SlendiumStatic\Base\Site\Resource\Stylesheet($uri, $file),
+			'css' => new Stylesheet($uri, $file),
 			default => new FileResource($uri, $file)
 		};
 	}

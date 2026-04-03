@@ -1,6 +1,6 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Base\Site\Resource\Stylesheet;
+namespace Slendium\SlendiumStatic\Base\Site;
 
 use Exception;
 use Override;
@@ -14,7 +14,7 @@ use Slendium\SlendiumStatic\Site\Uri;
  * @author C. Fahner
  * @copyright Slendium 2026
  */
-final class DefaultStylesheet implements Resource {
+final class CommonStyles implements Resource {
 
 	public function __construct(
 
@@ -26,7 +26,7 @@ final class DefaultStylesheet implements Resource {
 	/** @return Exception|non-empty-string */
 	#[Override]
 	public function generateContents(): Exception|string {
-		$dir = __DIR__.\DIRECTORY_SEPARATOR.'DefaultStylesheet'.\DIRECTORY_SEPARATOR;
+		$dir = __DIR__.\DIRECTORY_SEPARATOR.'CommonStyles'.\DIRECTORY_SEPARATOR;
 		$scanned = \scandir($dir);
 		if ($scanned === false) {
 			return new Exception('Could not scan directory that contains the default stylesheet');

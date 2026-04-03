@@ -1,6 +1,6 @@
 <?php
 
-namespace Slendium\SlendiumStatic\Base\Site\Resource;
+namespace Slendium\SlendiumStatic\Base\Site;
 
 use Closure;
 use Exception;
