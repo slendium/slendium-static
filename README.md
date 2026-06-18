@@ -5,7 +5,7 @@ Static website generator.
 ## Installation
 
 Requires **PHP >= 8.5**, [Composer](https://getcomposer.org) and [npm](https://www.npmjs.com). Simply
-run `composer install slendium/slendium-static` to add it to your project.
+run `composer require slendium/slendium-static` to add it to your project.
 
 ## Usage
 
@@ -15,6 +15,24 @@ using either HTML or Markdown. Running the script at `vendor/bin/generate-site` 
 in the `public/` directory.
 
 ## Examples
+
+### Markdown article
+
+An article can be defined using markdown. Metadata can be declared using a YAML or JSON prefix.
+
+```
+---
+title: Alternative title
+description: A description or summary of the article.
+created: 2026-06-18
+draft: true
+---
+
+# Title
+
+Lorem ipsum. This page is a draft so it won't be in the output.
+
+```
 
 ### Default configuration file
 

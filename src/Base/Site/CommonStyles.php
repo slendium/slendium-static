@@ -5,7 +5,9 @@ namespace Slendium\SlendiumStatic\Base\Site;
 use Exception;
 use Override;
 
+use Slendium\SlendiumStatic\Site\ContentBody;
 use Slendium\SlendiumStatic\Site\KnownUris;
+use Slendium\SlendiumStatic\Site\ReadOnlyContentBody;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
 
@@ -23,9 +25,8 @@ final class CommonStyles implements Resource {
 
 	) { }
 
-	/** @return Exception|non-empty-string */
 	#[Override]
-	public function generateContents(): Exception|string {
+	public function generateContents(): ContentBody|Exception {
 		$dir = __DIR__.\DIRECTORY_SEPARATOR.'CommonStyles'.\DIRECTORY_SEPARATOR;
 		$scanned = \scandir($dir);
 		if ($scanned === false) {
@@ -44,7 +45,7 @@ final class CommonStyles implements Resource {
 		}
 		return $contents === ''
 			? new Exception('Unexpected empty default stylesheet')
-			: $contents;
+			: new ReadOnlyContentBody($contents);
 	}
 
 }

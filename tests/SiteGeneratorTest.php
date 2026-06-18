@@ -13,6 +13,7 @@ use Slendium\SlendiumStatic\Base\Content\ArraySectionProvider;
 use Slendium\SlendiumStatic\Base\Content\HtmlSection;
 use Slendium\SlendiumStatic\Common\HtmlParser;
 use Slendium\SlendiumStatic\Content\SectionNames;
+use Slendium\SlendiumStatic\Site\ContentBody;
 use Slendium\SlendiumStatic\Site\KnownUris;
 use Slendium\SlendiumStatic\Site\UriInfo;
 use Slendium\SlendiumStatic\Source\Path;
@@ -176,7 +177,8 @@ class SiteGeneratorTest extends TestCase {
 		$site->save('out');
 		$result = $site->map->get(KnownUris::MainStylesheet())->generateContents();
 
-		$this->assertTrue(\is_string($result) && $result !== '');
+		$this->assertInstanceOf(ContentBody::class, $result);
+		$this->assertTrue($result->getBytes() !== '');
 	}
 
 	public function test_create_save_shouldMergeUserStylesWithGeneratedStyles(): void {
@@ -192,7 +194,8 @@ class SiteGeneratorTest extends TestCase {
 		$site->save('out');
 		$result = $site->map->get(KnownUris::MainStylesheet())->generateContents();
 
-		$this->assertTrue(\is_string($result) && \strpos($result, $salt) !== false);
+		$this->assertInstanceOf(ContentBody::class, $result);
+		$this->assertTrue(\strpos($result->getBytes(), $salt) !== false);
 	}
 
 }

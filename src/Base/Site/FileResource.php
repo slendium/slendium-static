@@ -6,6 +6,7 @@ use ArrayAccess;
 use Exception;
 use Override;
 
+use Slendium\SlendiumStatic\Site\ContentBody;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStatic\Source\File;
@@ -27,7 +28,7 @@ class FileResource implements Resource {
 	) { }
 
 	#[Override]
-	public function generateContents(): File|Exception|string {
+	public function generateContents(): ContentBody|File|Exception {
 		return $this->file;
 	}
 

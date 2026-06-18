@@ -65,7 +65,7 @@ class MemoryFilesystem implements Filesystem {
 			$current =& $current[$name];
 		}
 		$current[$filename] = $contents;
-		$this->structure = $root;
+		$this->structure = $root; // @phpstan-ignore assign.propertyType (assume all inner arrays are array<string,mixed>)
 	}
 
 	/** @return array<non-empty-string,mixed>|string|null An array represents a directory, a string a file, `null` not found */

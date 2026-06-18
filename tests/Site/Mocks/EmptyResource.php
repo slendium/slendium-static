@@ -4,6 +4,8 @@ namespace Slendium\SlendiumStaticTests\Site\Mocks;
 
 use Override;
 
+use Slendium\SlendiumStatic\Site\ContentBody;
+use Slendium\SlendiumStatic\Site\ReadOnlyContentBody;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
 
@@ -24,8 +26,8 @@ class EmptyResource implements Resource {
 	}
 
 	#[Override]
-	public function generateContents(): string {
-		return '';
+	public function generateContents(): ContentBody {
+		return new ReadOnlyContentBody('');
 	}
 
 }

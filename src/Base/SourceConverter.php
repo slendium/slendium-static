@@ -21,6 +21,8 @@ use Slendium\SlendiumStatic\Source\Path;
 use Slendium\SlendiumStatic\Source\PathInfo;
 
 /**
+ * Creates `Site`'s from filesystem paths.
+ *
  * @internal
  * @phpstan-import-type ConfigsMap from Configs
  * @author C. Fahner
@@ -62,7 +64,7 @@ class SourceConverter {
 		$resources = [ ];
 		foreach ($unique as $uri => $entries) {
 			if (\count($entries) > 1) {
-				$paths = \array_map(static fn($entry) => $entry[0], $entries);
+				$paths = \array_map(static fn($entry) => (string)$entry[0], $entries);
 				foreach ($entries as $entry) {
 					$errors[] = new Pathed($entry[0], SiteException::forAmbiguousResource($uri, $paths));
 				}

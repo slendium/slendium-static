@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use Slendium\SlendiumStatic\Base\Site\Map;
+use Slendium\SlendiumStatic\Site\ContentBody;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
 use Slendium\SlendiumStaticTests\Site\Mocks\EmptyResource;
@@ -99,7 +100,8 @@ class MapTest extends TestCase {
 		$sut->overwrite(new PlainResource('/index.html', $overwrittenContents));
 		$result = $sut->get(Uri::fromString('/index.html'))->generateContents();
 
-		$this->assertSame($overwrittenContents, $result);
+		$this->assertInstanceOf(ContentBody::class, $result);
+		$this->assertSame($overwrittenContents, $result->getBytes());
 	}
 
 	public function test_overwrite_shouldThrow_whenNotOverwritingAnything(): void {

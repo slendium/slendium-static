@@ -8,11 +8,12 @@ use Override;
 use Slendium\SlendiumStatic\Site as ISite;
 use Slendium\SlendiumStatic\Base\Site\CommonStyles;
 use Slendium\SlendiumStatic\Base\Site\Stylesheet;
+use Slendium\SlendiumStatic\Content\Meta\FrontMatterHolder;
+use Slendium\SlendiumStatic\Site\ContentBody;
 use Slendium\SlendiumStatic\Site\KnownUris;
 use Slendium\SlendiumStatic\Site\MapSearch;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Source\Copyable;
-use Slendium\SlendiumStatic\Source\File;
 use Slendium\SlendiumStatic\Source\Filesystem;
 use Slendium\SlendiumStatic\Source\Path;
 use Slendium\SlendiumStatic\Source\Pathed;
@@ -51,12 +52,19 @@ final class Site implements ISite {
 
 		foreach ($this->map as $resource) {
 			$contents = $resource->generateContents();
-			if (\is_string($contents)) {
-				$this->filesystem->writeFile(Path::fromString($path.(new Path($resource->uri->path))), $contents);
-			} else if ($contents instanceof File) {
-				$this->filesystem->copyFile($contents->path, Path::fromString($path.(new Path($resource->uri->path))));
-			} else {
+			if ($contents instanceof Exception) {
 				return $contents;
+			}
+
+			if ($contents instanceof FrontMatterHolder && $contents->frontMatter->isDraft) {
+				continue;
+			}
+
+			$targetPath = Path::fromString($path.(new Path($resource->uri->path)));
+			if ($contents instanceof ContentBody) {
+				$this->filesystem->writeFile($targetPath, $contents->getBytes());
+			} else { // $contents instanceof File
+				$this->filesystem->copyFile($contents->path, $targetPath);
 			}
 		}
 		return true;
@@ -73,7 +81,7 @@ final class Site implements ISite {
 			if ($commonCss instanceof Exception) {
 				return $commonCss;
 			}
-			$userStyles->prepend($commonCss);
+			$userStyles->prepend($commonCss->getBytes()); // @phpstan-ignore argument.type (the common style is a fixed string and thus never empty)
 		} else {
 			$map->insert($commonStyles);
 		}

@@ -7,6 +7,8 @@ use Exception;
 use Override;
 
 use Slendium\SlendiumStatic\Source\File;
+use Slendium\SlendiumStatic\Site\ContentBody;
+use Slendium\SlendiumStatic\Site\ReadOnlyContentBody;
 use Slendium\SlendiumStatic\Site\Resource;
 use Slendium\SlendiumStatic\Site\Uri;
 
@@ -31,10 +33,12 @@ final class Stylesheet implements Resource {
 	) { }
 
 	#[Override]
-	public function generateContents(): File|Exception|string {
+	public function generateContents(): ContentBody|File|Exception {
 		return \count($this->prepends) > 0
 			? $this->generateModifiedContents()
-			: $this->source;
+			: (\is_string($this->source)
+			? new ReadOnlyContentBody($this->source)
+			: $this->source); // $this->source is File
 	}
 
 	/** @param non-empty-string $css */
@@ -42,7 +46,7 @@ final class Stylesheet implements Resource {
 		$this->prepends[] = $css;
 	}
 
-	private function generateModifiedContents(): Exception|string {
+	private function generateModifiedContents(): ContentBody|Exception {
 		$stylesheet = '';
 		foreach (\array_reverse($this->prepends) as $css) {
 			$stylesheet .= "$css\n";
@@ -52,7 +56,7 @@ final class Stylesheet implements Resource {
 			: $this->source;
 		return $mainBody instanceof Exception
 			? $mainBody
-			: ($stylesheet.$mainBody);
+			: new ReadOnlyContentBody($stylesheet.$mainBody);
 	}
 
 }

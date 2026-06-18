@@ -19,6 +19,6 @@ interface Resource {
 	public Uri $uri { get; }
 
 	/** @since 1.0 */
-	public function generateContents(): File|Exception|string;
+	public function generateContents(): ContentBody|File|Exception;
 
 }
